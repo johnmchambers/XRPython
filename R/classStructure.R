@@ -89,6 +89,11 @@
    c(Class, module)
 }
 
+#' Class and Generator for Python Class Description from Python Metadata
+#'
+#' Creates a class definition object consistent with the XR structure.
+#' See \code{\link{setPythonClass}} for details and arguments to the generator for the class.
+#' @param evaluator the interface evaluator; by default and usually, the current Python evaluator.
 PythonClassDef <- setRefClass("PythonClassDef",
                               fields = list(
                                   className = "character",
@@ -139,7 +144,27 @@ PythonClassDef$methods(
                            })
                        }
                        )
-
+#' Create a Proxy Class for a Python Class
+#'
+#' An R class is defined to act as a proxy for a specified Python class.  This specializes the
+#' \code{\link[XR]{setProxyClass}} function using Python facilities for finding the class definition.
+#'
+#' The methods and (inferred) fields of a Python Class are determined and returned consistently
+#' with the XR structure.
+#' Python classes are coded as class objects in Python, but only the methods are fixed and defined.
+#' Objects from the class can have any fields, usually created at initialization time but entirely legal
+#' to be added by other methods later.  By default, the initialize method tries to create an object from the
+#' class, with no arguments in the call to the class generator.   Supply the \code{example} argument to
+#' override.
+#'
+#' @param Class the Python name for the class.
+#' @param module the Python module, if this is not a standard library class.
+#' @param example an optional (proxy for) an object from the class, to be used to define the fields in the
+#' class.  If omitted, the interface tries to create a standard object from the class by calling the Python
+#' generator with no argument.  Argument \code{example} can also be supplied as \code{FALSE} to suppress
+#' generating the default object.
+#' @param fields,methods arguments to \code{setProxyClass} and usually omitted.
+#' @param ServerClass,contains,proxyObjectClass ditto.
 setPythonClass <- function(Class, module = "",
                            fields = character(), methods = NULL,
                            ServerClass = Class,
@@ -216,6 +241,19 @@ allIndices <- function(k) {
     c(text, "}")
 }
 
+#' Proxy Objects in R for Python Functions
+#'
+#' A class and generator function for proxies in R for Python functions.
+#'
+#' An object from this class is an R function that is a proxy for a function in Python. Calls to the R function evaluate
+#' a call to the Python function.  The arguments in the call are converted to equivalent Python objects;
+#' these typically include proxy objects for results previously computed through the XRPython interface.
+#' @slot pyDocs the docstring from Python, if any.
+#'
+#' @slot pyArgs the Python argument names.
+#' @slot name the name of the server language function
+#' @slot module the name of the module, if that needs to be imported
+#' @slot evaluatorClass the class for the evaluator, by default and usually, \code{\link{PythonInteface}}
 PythonFunction <- setClass("PythonFunction",
                            slots = c(pyDocs = "character", pyArgs = "character"),
                            contains = "ProxyFunction")

@@ -1,5 +1,9 @@
 
-
+#' An Interface to Python
+#'
+#' The PythonInterface class provides an evaluator for computations in Python, following the structure
+#' in the XR  package.  Proxy functions and classes allow use of the interface with no explicit
+#' reference to the evaluator.  The function \code{RPython()} returns an evaluator object.
 PythonInterface <- setRefClass("PythonInterface",
                                  contains = "Interface",
                                  fields = list(
@@ -10,6 +14,8 @@ PythonInterface <- setRefClass("PythonInterface",
 
 PythonInterface$methods(
     initialize = function(...) {
+        'On the first call, adds the python directory of this package to the search path in Python,
+and imports the Python functions used in the interface methods.'
         languageName <<- "Python"
         obj <- PythonObject()
         obj$.ev <- .self
@@ -76,6 +82,7 @@ the first line of the text.'
             NULL
     },
     Source = function(filename) {
+        'The $Source() method uses the Python function execfile() and therefore is quite efficient.'
         Command("execfile(%s)", filename)
     },
     ServerRemove = function(key) {
@@ -87,6 +94,8 @@ since it does no error checking; use $Command() instead.'
         rPython::python.exec(strings)
     },
     ServerSerialize = function(key, file) {
+        'Serializing and unserializing in the Python interface use the pickle structure in Python.
+Serialization does not rely on the R equivalent object.'
         Command("pickle_for_R(%s, %s)", key, file)
     },
     ServerUnserialize = function(file, all) {
@@ -112,6 +121,8 @@ since it does no error checking; use $Command() instead.'
 
     ## replaces the XR method for Import()
     Import = function(module, ...)  {
+        'The Python version of this method replaces the general version in XR with the "import" or
+"from ... import" directives in Python as appropriate.'
         members <- unlist(c(...))
         imported <- base::exists(module, envir = modules)
         if(imported && is.null(members)) # the usual case
@@ -182,6 +193,13 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 
 .PythonInterfaceClass <- getClass("PythonInterface")
 
+#' An Evaluator for the Python Interface.
+#'
+#' Returns an evaluator for the Python interface.  Starts one on the first call, or if arguments are provided;
+#' providing argument \code{.makeNew = TRUE} will force a new evaluator.  Otherwise, the current evaluator is
+#' returned.
+#'
+#' See \code{\link{PythonInterface}} for details of the evaluator.
 RPython <- function(...)
     XR::getInterface(.PythonInterfaceClass, ...)
 
@@ -195,15 +213,39 @@ RPython <- function(...)
 .pythonOperators <- c(.pythonOperators, "<>", ".=", "~")
 ## (we let the Python parser handle which have unary forms or not)
 
+#' Proxy Objects in R for Python Objects
+#'
+#' This is a class for all proxy objects from a Python class with an R proxy class definition.
+#' Objects will normally be from a subclass of this class, for the specific Python class.
+#'
+#' Proxy objects returned from the Python interface will be promoted to objects
+#' from a specific R proxy class for their Python class, if such a class has been defined.
 PythonObject <- setRefClass("PythonObject",
                             contains = "ProxyClassObject")
 
+#' Function Versions of Methods for Python Interface evaluators.
+#'
+#' @name functions
+#' @param object an R object, to be sent to Python (\code{pythonSend()}) or a proxy object for
+#' the Python object to be converted (\code{pythonGet()}).
+#' @param evaluator The evaluator object to use.  By default, and usually, the current evaluator
+#' is used, and one is started if none has been.
+NULL
+
+#' @describeIn functions
+#' sends the \code{object} to Python, converting it via methods for
+#' \code{\link[XR]{asServerObject}} and returns a proxy for the converted object.
 pythonSend <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Send(object)
 
+#' @describeIn functions
+#' converts the proxy object that is its argument to an \R{} object.
 pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Get(object)
 
+#' @describeIn functions
+#' adds the directory specified to the search path for Python objects.
+#' @param ... arguments \code{directory}, \code{package} and \code{pos}.
 pythonAddToPath <- function(...,  evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$AddToPath(...)
 
