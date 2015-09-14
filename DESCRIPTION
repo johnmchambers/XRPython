@@ -3,14 +3,13 @@ Type: Package
 Title: Structured Interface to Python
 Version: 0.5
 Date: 2015-01-01
-Author: John Chambers
-Maintainer: <jmc@stat.stanford.edu>
+Author: John M. Chambers
+Maintainer: John Chambers <jmc@stat.stanford.edu>
 Description: A Python interface structured according to the general
 	     form described in package XR and the book (in progress)
 	     "Extending R"
 Collate: pythonInterface.R classStructure.R pythonProxyClasses.R
-License: GPL
-Depends: methods
-Imports: XR
+License: GPL (>= 2)
+Imports: methods, XR
 Packaged: 2015-09-10 13:22:40 UTC; jmc
 NeedsCompilation: no
