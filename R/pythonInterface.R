@@ -249,3 +249,14 @@ pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass
 pythonAddToPath <- function(...,  evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$AddToPath(...)
 
+ns <- tryCatch(loadNamespace("XML"), error = function(e) NULL)
+if(!is.null(ns)) {
+    setMethod("asServerObject",
+    c("XMLInternalDocument", "PythonObject"),
+          function(object, prototype) {
+              file <- tempfile()
+              XML::saveXML(object, file)
+              gettextf("xml.etree.ElementTree.parse(%s)",
+                       asServerObject(file, prototype))
+          })
+}

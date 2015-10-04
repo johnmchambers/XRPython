@@ -5,6 +5,8 @@ import copy
 import sys
 import json
 import pickle
+## just for the XMLAbstractDocument example method
+import xml.etree.ElementTree
 
 from json import loads as objectFromJSON
 
