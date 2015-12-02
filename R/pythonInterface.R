@@ -245,10 +245,33 @@ pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass
 
 #' @describeIn functions
 #' adds the directory specified to the search path for Python objects.
-#' @param ... arguments \code{directory}, \code{package} and \code{pos}.
-pythonAddToPath <- function(...,  evaluator = XR::getInterface(.PythonInterfaceClass))
-    evaluator$AddToPath(...)
+#' If called from the source directory of a package during installation, also sets up
+#' a load action for that package.  If you want to add the path ONLY to one
+#' evaluator, you must supply that as the \code{evaluator} argument.
+#' @param directory the directory to add, defaults to "python"
+#' @param package,pos arguments \code{package} and \code{pos} to the method, usually omitted.
+pythonAddToPath <- function(directory = "python", package = utils::packageName(topenv(parent.frame())), pos = NA,  evaluator) {
+    if(missing(evaluator))
+        XR::serverAddToPath("PythonInterface", directory, package, pos)
+    else
+        evaluator$AddToPath(directory, package, pos)
+}
 
+#' @describeIn functions
+#' adds the module information specified to the modules imported for Python evaluators.
+#'
+#' Like \code{pythonAddToPath()} if called from the source directory of a package during installation, also sets up
+#' a load action for that package.
+#' @param module the directory to add, defaults to "python"
+#' @param ...  arguments for the Python \code{from...import} version~.
+pythonImport <- function(module, ...,  evaluator) {
+    if(missing(evaluator))
+        XR::serverImport("PythonInterface",module, ...)
+    else
+        evaluator$Import(module, ...)
+}
+
+## Conditionally arrange to use XML package to send XML objects
 ns <- tryCatch(loadNamespace("XML"), error = function(e) NULL)
 if(!is.null(ns)) {
     setMethod("asServerObject",

@@ -6,6 +6,6 @@ export(RPython)
 export(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 exportClass(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 
-export(pythonAddToPath, pythonGet, pythonSend)
+export(pythonAddToPath, pythonGet, pythonSend, pythonImport)
 export(setPythonClass)
 
