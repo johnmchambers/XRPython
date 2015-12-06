@@ -244,6 +244,26 @@ pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass
     evaluator$Get(object)
 
 #' @describeIn functions
+#' evaluate the expression in Python, with substitution
+pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Eval(expr, ...)
+
+#' @describeIn functions
+#' evaluate the command in Python, with substitution
+pythonCommand <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Command(expr, ...)
+
+#' @describeIn functions
+#' serialize the \code{object} in Python, via \code{pickle}
+pythonSerialize <- function(object,  file, append = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Serialize(object, file, append)
+
+#' @describeIn functions
+#' unserialize the file in Python, via \code{pickle}
+pythonUnserialize <- function(file, all = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Unserialize(file, all)
+
+#' @describeIn functions
 #' adds the directory specified to the search path for Python objects.
 #' If called from the source directory of a package during installation, also sets up
 #' a load action for that package.  If you want to add the path ONLY to one
