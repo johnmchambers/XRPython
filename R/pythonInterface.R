@@ -255,7 +255,6 @@ pythonCommand <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfa
 pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Get(object)
 
-<<<<<<< Updated upstream
 #' @describeIn functions
 #' evaluate the expression in Python, with substitution
 pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
@@ -276,8 +275,6 @@ pythonSerialize <- function(object,  file, append = FALSE, evaluator = XR::getIn
 pythonUnserialize <- function(file, all = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Unserialize(file, all)
 
-#' @describeIn functions
-=======
 #' Import a Python module or add a directory to the Python Search Path
 #'
 #' adds the module information specified to the modules imported for Python evaluators.
@@ -295,7 +292,6 @@ pythonImport <- function( ...,  evaluator) {
 }
 
 #' @describeIn pythonImport
->>>>>>> Stashed changes
 #' adds the directory specified to the search path for Python objects.
 #' @param directory the directory to add, defaults to "python"
 #' @param package,pos arguments \code{package} and \code{pos} to the method, usually omitted.
