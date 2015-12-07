@@ -239,10 +239,23 @@ pythonSend <- function(object, evaluator = XR::getInterface(.PythonInterfaceClas
     evaluator$Send(object)
 
 #' @describeIn functions
+#' evaluates the \code{expr} string subsituting the arguments.  See the corresponding evaluator
+#' method for details.
+pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Eval(expr, ...)
+
+#' @describeIn functions
+#' evaluates the \code{expr} string subsituting the arguments; used for a command that is not
+#' an expression.
+pythonCommand <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Command(expr, ...)
+
+#' @describeIn functions
 #' converts the proxy object that is its argument to an \R{} object.
 pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Get(object)
 
+<<<<<<< Updated upstream
 #' @describeIn functions
 #' evaluate the expression in Python, with substitution
 pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
@@ -264,31 +277,34 @@ pythonUnserialize <- function(file, all = FALSE, evaluator = XR::getInterface(.P
     evaluator$Unserialize(file, all)
 
 #' @describeIn functions
+=======
+#' Import a Python module or add a directory to the Python Search Path
+#'
+#' adds the module information specified to the modules imported for Python evaluators.
+#'
+#' If called from the source directory of a package during installation, both \code{pythonImport}
+#' and \code{pythonAddToPath()} also set up
+#' a load action for that package.  The functional versions, not the methods themselves, should
+#' be called from package source files to ensure that the load actions are created.
+#' @param ...  arguments for the \code{$Import()} method. See the method documentation for details.
+pythonImport <- function( ...,  evaluator) {
+    if(missing(evaluator))
+        XR::serverImport("PythonInterface", ...)
+    else
+        evaluator$Import(...)
+}
+
+#' @describeIn pythonImport
+>>>>>>> Stashed changes
 #' adds the directory specified to the search path for Python objects.
-#' If called from the source directory of a package during installation, also sets up
-#' a load action for that package.  If you want to add the path ONLY to one
-#' evaluator, you must supply that as the \code{evaluator} argument.
 #' @param directory the directory to add, defaults to "python"
 #' @param package,pos arguments \code{package} and \code{pos} to the method, usually omitted.
+#' @param evaluator The evaluator object to use. Supplying this argument suppresses the load action.
 pythonAddToPath <- function(directory = "python", package = utils::packageName(topenv(parent.frame())), pos = NA,  evaluator) {
     if(missing(evaluator))
         XR::serverAddToPath("PythonInterface", directory, package, pos)
     else
         evaluator$AddToPath(directory, package, pos)
-}
-
-#' @describeIn functions
-#' adds the module information specified to the modules imported for Python evaluators.
-#'
-#' Like \code{pythonAddToPath()} if called from the source directory of a package during installation, also sets up
-#' a load action for that package.
-#' @param module the directory to add, defaults to "python"
-#' @param ...  arguments for the Python \code{from...import} version~.
-pythonImport <- function(module, ...,  evaluator) {
-    if(missing(evaluator))
-        XR::serverImport("PythonInterface",module, ...)
-    else
-        evaluator$Import(module, ...)
 }
 
 ## Conditionally arrange to use XML package to send XML objects
