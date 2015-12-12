@@ -264,7 +264,7 @@ pythonUnserialize <- function(file, all = FALSE, evaluator = XR::getInterface(.P
     evaluator$Unserialize(file, all)
 
 #' @describeIn functions
-#' adds the directory specified to the search path for Python objects.
+#' adds the directory specified to the search path for all future Python evaluator objects.
 #' If called from the source directory of a package during installation, also sets up
 #' a load action for that package.  If you want to add the path ONLY to one
 #' evaluator, you must supply that as the \code{evaluator} argument.
@@ -278,7 +278,7 @@ pythonAddToPath <- function(directory = "python", package = utils::packageName(t
 }
 
 #' @describeIn functions
-#' adds the module information specified to the modules imported for Python evaluators.
+#' adds the module information specified to the modules imported for future Python evaluator objects.
 #'
 #' Like \code{pythonAddToPath()} if called from the source directory of a package during installation, also sets up
 #' a load action for that package.
