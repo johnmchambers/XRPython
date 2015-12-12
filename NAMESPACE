@@ -8,5 +8,6 @@ exportClass(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 
 export(pythonAddToPath, pythonGet, pythonSend, pythonImport, pythonEval, pythonCommand,
        pythonSerialize, pythonUnserialize)
+
 export(setPythonClass)
 
