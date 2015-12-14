@@ -256,6 +256,11 @@ pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass
     evaluator$Get(object)
 
 #' @describeIn functions
+#' evaluate the file of Python source.
+pythonSource <- function(..., evaluator = RPython())
+    evaluator$Source(...)
+
+#' @describeIn functions
 #' serialize the \code{object} in Python, via \code{pickle}
 pythonSerialize <- function(object,  file, append = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Serialize(object, file, append)
