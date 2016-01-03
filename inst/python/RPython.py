@@ -313,7 +313,7 @@ def set_toR(what, method):
 
 ## return a typed vector that R will convert to that class of object
 
-def vector_R(data, typeR = None, missing = [ ]):
+def vectorR(data, typeR = None, missing = [ ]):
     if typeR is None:
         typeR = inferType(data)
     return { ".RClass" : "vector_R", ".type" : "S4", ".package" : "XR",

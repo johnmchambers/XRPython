@@ -190,4 +190,13 @@ viewvalues = function (..., .ev = XRPython::RPython())
     .ev$MethodCall(.proxyObject, "viewvalues", ...)
 })
 
+### FIXME:  this seems innocuous, but breaks source("EvalEx1.S") in XRPython
 
+## for( type in c("integer", "numeric", "logical", "character"))
+## {
+##     def <- eval(substitute(function(from)
+##               pythonCall("vectorR", from, TYPE, .get = TRUE), list(TYPE = type)))
+##     setAs("list_Python", type,
+##           def,
+##           function(from, value) stop("Type change not meaningful for \"list_Python"))
+## }

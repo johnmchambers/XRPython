@@ -32,7 +32,7 @@ and imports the Python functions used in the interface methods.'
                 "from RPython import getMethods, classStructure, arglist_for_R, function_for_R, objectFromJSON"
             )
             PythonCommand(
-                "from RPython import value_for_R, del_for_R, pickle_for_R, unpickle_for_R, start_unpickle, end_unpickle, vector_R")
+                "from RPython import value_for_R, del_for_R, pickle_for_R, unpickle_for_R, start_unpickle, end_unpickle, vectorR")
         }
      },
     ServerEval = function(strings, key = "", get = NA) {
@@ -249,6 +249,11 @@ pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceC
 #' an expression.
 pythonCommand <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Command(expr, ...)
+
+#' @describeIn functions
+#' call the function in Python, with arguments given; expr is the string name of the function
+pythonCall <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Call(expr, ...)
 
 #' @describeIn functions
 #' converts the proxy object that is its argument to an \R{} object.
