@@ -7,12 +7,9 @@ export(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 exportClass(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 
 export(pythonAddToPath, pythonGet, pythonSend, pythonImport, pythonEval, pythonCommand,
-<<<<<<< HEAD
-       pythonSerialize, pythonUnserialize, pythonCall)
-=======
-       pythonSource, pythonSerialize, pythonUnserialize)
->>>>>>> origin/master
+       pythonSource, pythonSerialize, pythonUnserialize, pythonCall)
 
 export(setPythonClass)
 
 export(noScalar)
+exportClass("list_Python", "dict_Python")
