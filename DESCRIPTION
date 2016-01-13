@@ -10,6 +10,6 @@ Description: A Python interface structured according to the general
 	     "Extending R"
 Collate: pythonInterface.R classStructure.R pythonProxyClasses.R
 License: GPL (>= 2)
-Imports: methods, XR
+Imports: methods, XR, rPython
 Packaged: 2015-09-10 13:22:40 UTC; jmc
 NeedsCompilation: no
