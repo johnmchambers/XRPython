@@ -259,7 +259,8 @@ PythonFunction <- setClass("PythonFunction",
                            contains = "ProxyFunction")
 
 setMethod("initialize", "PythonFunction",
-          function(.Object, name, module = "", method = "", ..., .ev = RPython()){
+          function(.Object, name, module = "", method = "", ...,
+                   save = FALSE, objName = name, .ev = RPython()){
               ## the escape to avoid requiring Python:  work
               ## up through XR::ProxyFunction to set slots directly
               if(methods::hasArg(".Data"))
@@ -300,6 +301,8 @@ setMethod("initialize", "PythonFunction",
               .Object@module <- module
               .Object@evaluatorClass <- class(.ev)
               .Object@pyDocs <- as.character(.ev$Eval(gettextf("inspect.getdoc(%s)", fname), .get = TRUE))
+              if(!identical(save, FALSE))
+                  .ev$SaveProxyFunction(save, .Object, objName)
               .Object
           })
 
