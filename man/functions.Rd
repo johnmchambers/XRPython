@@ -2,16 +2,36 @@
 % Please edit documentation in R/pythonInterface.R
 \name{functions}
 \alias{functions}
-\alias{pythonAddToPath}
+\alias{pythonCall}
+\alias{pythonCommand}
+\alias{pythonEval}
 \alias{pythonGet}
+\alias{pythonName}
 \alias{pythonSend}
+\alias{pythonSerialize}
+\alias{pythonSource}
+\alias{pythonUnserialize}
 \title{Function Versions of Methods for Python Interface evaluators.}
 \usage{
 pythonSend(object, evaluator = XR::getInterface(.PythonInterfaceClass))
 
+pythonEval(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+
+pythonCommand(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+
+pythonCall(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+
 pythonGet(object, evaluator = XR::getInterface(.PythonInterfaceClass))
 
-pythonAddToPath(..., evaluator = XR::getInterface(.PythonInterfaceClass))
+pythonSource(..., evaluator = RPython())
+
+pythonSerialize(object, file, append = FALSE,
+  evaluator = XR::getInterface(.PythonInterfaceClass))
+
+pythonUnserialize(file, all = FALSE,
+  evaluator = XR::getInterface(.PythonInterfaceClass))
+
+pythonName(object)
 }
 \arguments{
 \item{object}{an R object, to be sent to Python (\code{pythonSend()}) or a proxy object for
@@ -19,8 +39,6 @@ the Python object to be converted (\code{pythonGet()}).}
 
 \item{evaluator}{The evaluator object to use.  By default, and usually, the current evaluator
 is used, and one is started if none has been.}
-
-\item{...}{arguments \code{directory}, \code{package} and \code{pos}.}
 }
 \description{
 Function Versions of Methods for Python Interface evaluators.
@@ -30,8 +48,22 @@ Function Versions of Methods for Python Interface evaluators.
 \item \code{pythonSend}: sends the \code{object} to Python, converting it via methods for
 \code{\link[XR]{asServerObject}} and returns a proxy for the converted object.
 
+\item \code{pythonEval}: evaluates the \code{expr} string subsituting the arguments.  See the corresponding evaluator
+method for details.
+
+\item \code{pythonCommand}: evaluates the \code{expr} string subsituting the arguments; used for a command that is not
+an expression.
+
+\item \code{pythonCall}: call the function in Python, with arguments given; expr is the string name of the function
+
 \item \code{pythonGet}: converts the proxy object that is its argument to an \R{} object.
 
-\item \code{pythonAddToPath}: adds the directory specified to the search path for Python objects.
+\item \code{pythonSource}: evaluate the file of Python source.
+
+\item \code{pythonSerialize}: serialize the \code{object} in Python, via \code{pickle}
+
+\item \code{pythonUnserialize}: unserialize the file in Python, via \code{pickle}
+
+\item \code{pythonName}: return the name by which this proxy object was assigned in Python
 }}
 

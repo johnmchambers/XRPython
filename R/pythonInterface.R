@@ -226,8 +226,9 @@ PythonObject <- setRefClass("PythonObject",
 #' Function Versions of Methods for Python Interface evaluators.
 #'
 #' @name functions
-#' @param object an R object, to be sent to Python (\code{pythonSend()}) or a proxy object for
-#' the Python object to be converted (\code{pythonGet()}).
+#' @param object For \code{pythonSend()}, an R object, to be sent to Python.  For \code{pythonGet()},
+#' \code{pythonSerialize()} and \code{pythonNqme()}, a proxy object for
+#' a Python object.
 #' @param evaluator The evaluator object to use.  By default, and usually, the current evaluator
 #' is used, and one is started if none has been.
 NULL
@@ -239,8 +240,10 @@ pythonSend <- function(object, evaluator = XR::getInterface(.PythonInterfaceClas
     evaluator$Send(object)
 
 #' @describeIn functions
-#' evaluates the \code{expr} string subsituting the arguments.  See the corresponding evaluator
-#' method for details.
+#' evaluates the \code{expr} string subsituting the arguments.
+#'
+#' @param expr A string for a Python expression or command, with C-style fields (\code{"%s"}) to be substituted for the following arguments, if any.
+#' @param ... Objects, either R objects to be converted or proxies for Python objects previously computed.
 pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Eval(expr, ...)
 
@@ -251,9 +254,11 @@ pythonCommand <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfa
     evaluator$Command(expr, ...)
 
 #' @describeIn functions
-#' call the function in Python, with arguments given; expr is the string name of the function
-pythonCall <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
-    evaluator$Call(expr, ...)
+#' call the function in Python, with arguments given.
+#' @param fun the string name of the function; a module name must be included in the string if the function has
+#' not been explicitly imported from that module.
+pythonCall <- function(fun, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Call(fun, ...)
 
 #' @describeIn functions
 #' converts the proxy object that is its argument to an \R{} object.
@@ -267,13 +272,21 @@ pythonSource <- function(..., evaluator = RPython())
 
 #' @describeIn functions
 #' serialize the \code{object} in Python, via \code{pickle}
+#' @param file a file or open connection.
+#' @param append should the serializing text be appended to a file; otherwise the file will be truncated on opening.
 pythonSerialize <- function(object,  file, append = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Serialize(object, file, append)
 
 #' @describeIn functions
 #' unserialize the file in Python, via \code{pickle}
+#' @param all should the unserialized object be a list of all serialized objects on the file?
 pythonUnserialize <- function(file, all = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Unserialize(file, all)
+
+#' @describeIn functions
+#' return the name by which this proxy object was assigned in Python
+pythonName <- function(object)
+    XR::proxyName(object)
 
 #' Import a Python module or add a directory to the Python Search Path
 #'

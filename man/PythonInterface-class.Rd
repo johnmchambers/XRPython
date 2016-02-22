@@ -35,6 +35,9 @@ object should be assigned with this name. The value returned is the R result, wh
 be an AssignedProxy() object. If `get` is TRUE or the value judged simple enough,
 it will be converted to an ordinary R object instead.}
 
+\item{\code{ServerFunctionDef(name, module = "", ...)}}{The XR method defines the proxy function with no special metadata information.
+Server langugae metadata may be used by a method that overrides this one, and calls it.}
+
 \item{\code{ServerRemove(key)}}{Should be defined by the server language interface:
     The reference previously created for `key` should be removed.
 What happens has no effect on the client side; the intent is to potentially recover memory.}

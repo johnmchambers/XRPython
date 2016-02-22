@@ -6,7 +6,10 @@
 \alias{PythonFunction-class}
 \title{Proxy Objects in R for Python Functions}
 \description{
-An R function that is a proxy for a function in Python. Calls to the R function evaluate
+A class and generator function for proxies in R for Python functions.
+}
+\details{
+An object from this class is an R function that is a proxy for a function in Python. Calls to the R function evaluate
 a call to the Python function.  The arguments in the call are converted to equivalent Python objects;
 these typically include proxy objects for results previously computed through the XRPython interface.
 }
@@ -21,6 +24,6 @@ these typically include proxy objects for results previously computed through th
 
 \item{\code{module}}{the name of the module, if that needs to be imported}
 
-\item{\code{evaluatorClass}}{the class for the evaluator, identifying which server lanaguage is involved.}
+\item{\code{evaluatorClass}}{the class for the evaluator, by default and usually, \code{\link{PythonInteface}}}
 }}
 
