@@ -243,7 +243,8 @@ pythonSend <- function(object, evaluator = XR::getInterface(.PythonInterfaceClas
 #' evaluates the \code{expr} string subsituting the arguments.
 #'
 #' @param expr A string for a Python expression or command, with C-style fields (\code{"%s"}) to be substituted for the following arguments, if any.
-#' @param ... Objects, either R objects to be converted or proxies for Python objects previously computed.
+#' @param ... Objects, either R objects to be converted or proxies for Python objects previously computed,
+#' except for \code{pythonShell} --- see the corresponding method, but usually no arguments are needed.
 pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Eval(expr, ...)
 
@@ -267,8 +268,9 @@ pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass
 
 #' @describeIn functions
 #' evaluate the file of Python source.
-pythonSource <- function(..., evaluator = RPython())
-    evaluator$Source(...)
+#' @param filename the file of Python source to be evaluated.
+pythonSource <- function(filename, evaluator = RPython())
+    evaluator$Source(filename)
 
 #' @describeIn functions
 #' serialize the \code{object} in Python, via \code{pickle}
@@ -287,6 +289,11 @@ pythonUnserialize <- function(file, all = FALSE, evaluator = XR::getInterface(.P
 #' return the name by which this proxy object was assigned in Python
 pythonName <- function(object)
     XR::proxyName(object)
+
+#' @describeIn functions
+#' Start an interactive Python shell.  See the chapter file in the documentation, section 14.3.
+pythonShell <- function(..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Shell(...)
 
 #' Import a Python module or add a directory to the Python Search Path
 #'
