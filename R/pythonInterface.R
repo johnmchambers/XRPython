@@ -243,8 +243,9 @@ pythonSend <- function(object, evaluator = XR::getInterface(.PythonInterfaceClas
 #' evaluates the \code{expr} string subsituting the arguments.
 #'
 #' @param expr A string for a Python expression or command, with C-style fields (\code{"%s"}) to be substituted for the following arguments, if any.
-#' @param ... Objects, either R objects to be converted or proxies for Python objects previously computed,
-#' except for \code{pythonShell} --- see the corresponding method, but usually no arguments are needed.
+#' @param ... For the evaluation functions: Objects, either R objects to be converted or proxies for Python objects previously computed.
+#' For other functions, specialized arguments for the corresponding method.
+#' In particular, \code{.get=} for controlling whether the computed result should be converted.
 pythonEval <- function(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Eval(expr, ...)
 
@@ -263,14 +264,20 @@ pythonCall <- function(fun, ..., evaluator = XR::getInterface(.PythonInterfaceCl
 
 #' @describeIn functions
 #' converts the proxy object that is its argument to an \R{} object.
-pythonGet <- function(object, evaluator = XR::getInterface(.PythonInterfaceClass))
+pythonGet <- function(object,  evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Get(object)
 
 #' @describeIn functions
 #' evaluate the file of Python source.
 #' @param filename the file of Python source to be evaluated.
-pythonSource <- function(filename, evaluator = RPython())
-    evaluator$Source(filename)
+pythonSource <- function(filename, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Source(filename, ...)
+
+#' @describeIn functions
+#' define a Python function
+#' @param text,file  the definition as text or a file to read it from
+pythonDefine <- function(text, file, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Define(text, file, ...)
 
 #' @describeIn functions
 #' serialize the \code{object} in Python, via \code{pickle}
