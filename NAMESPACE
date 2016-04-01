@@ -13,3 +13,5 @@ export(setPythonClass)
 
 export(noScalar)
 exportClass("list_Python", "dict_Python")
+
+exportClass("from_Python")

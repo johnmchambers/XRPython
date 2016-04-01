@@ -343,3 +343,22 @@ if(!is.null(ns)) {
                        asServerObject(file, prototype))
           })
 }
+
+#' Class for General Python Class Objects
+#'
+#' The Python side of the interface will return a general object from a Python class as an R
+#' object of class "from_Python".  Its Python fields (converted to R objects) can be accessed by the \code{$}
+#' operator.
+#'
+#' @slot serverClass the Python type.
+#' @slot module the Python module, or ""
+#' @slot fields the converted versioin of the Python fields; these are accessed by the \code{$} operator.
+setClass("from_Python", contains = "from_Server")
+
+setMethod("initialize", "from_Python",
+    function (.Object, ...)
+    {
+        .Object@language <- "Python"
+        callNextMethod(.Object, ..., referenceClass = TRUE)
+    }
+)

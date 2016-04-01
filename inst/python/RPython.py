@@ -252,8 +252,9 @@ def proxy_or_object(obj, send, key):
     return toR(value)
 
 
-def R_Object(Class, package = "", type = ""):
-    value = {'.RClass' : Class, '.package' : package}
+def R_Object(Class, package = "", type = "", value = {}):
+    value['.RClass'] = Class
+    value['.package'] = package
     if type != "":
         value['.type'] = type
     return value
@@ -279,6 +280,16 @@ def toR_dict(obj):
             value = "{0}{1} : {2}".format(value, toR(keyi), toR(obj[keyi]))
     return "{0}{1}".format(value, '}')
 
+def toR_class(obj, typename, module):
+    value = R_Object("from_Python", "XRPython")
+    value["serverClass"] = typename
+    value["module"] = module
+    structure = classStructure(obj)
+    fields = { }
+    for fld in structure["fields"]:
+        fields[fld] = getattr(obj, fld)
+    value["fields"] = fields
+    return toR_dict(value)
 
 
 toR_methods = {'dict' : toR_dict, "list" : toR_list}
@@ -289,6 +300,7 @@ def toR(obj, typename = ""):
     if typename == 'instance': # old-style class
         typename = obj.__class__.__name__
     isClassObject = hasattr(obj, "__module__")
+    baseTypename = typename
     if isClassObject:
         module = obj.__module__
         typename = "{0}.{1}".format(module, typename)
@@ -299,13 +311,8 @@ def toR(obj, typename = ""):
         return f(obj)
     if scalarTypes.has_key(typename) or not isClassObject:
         return json.dumps(obj)
-    ## return object from classes with their attributes
-    value = { '.serverClass' : typename, '.module' : module}
-    for el in dir(obj):
-        member = getattr(obj, el)
-        if re.search("^[a-zA-Z]", el) and not isinstance(member, types.MethodType):
-            value[el] = member
-    return toR_dict(value)
+    ## return from_Python object
+    return toR_class(obj, baseTypename, module)
 
 def set_toR(what, method):
     toR_methods[what] = method # should check that method is a valid function
