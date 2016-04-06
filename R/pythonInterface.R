@@ -22,9 +22,8 @@ and imports the Python functions used in the interface methods.'
         prototypeObject <<- obj
         modules <<- new.env(parent = emptyenv())
         operators <<- .pythonOperators
-        callSuper(...)
-        args <- list(...)
-        if(!length(serverPath)) {
+        firstTime <- is.null(XR::getInterface(class(.self), .makeNew = FALSE))
+        if(firstTime) {
             ## execute some low-level commands the first time
             PythonCommand("import sys")
             AddToPath()
@@ -34,6 +33,7 @@ and imports the Python functions used in the interface methods.'
             PythonCommand(
                 "from RPython import value_for_R, del_for_R, pickle_for_R, unpickle_for_R, start_unpickle, end_unpickle, vectorR")
         }
+        callSuper(...)
      },
     ServerEval = function(strings, key = "", get = NA) {
              pySend <- { if(is.na(get)) "None"
@@ -311,9 +311,10 @@ pythonShell <- function(..., evaluator = XR::getInterface(.PythonInterfaceClass)
 #' a load action for that package.  The functional versions, not the methods themselves, should
 #' be called from package source files to ensure that the load actions are created.
 #' @param ...  arguments for the \code{$Import()} method. See the method documentation for details.
-pythonImport <- function( ...,  evaluator) {
+pythonImport <- function( ...,  evaluator,
+                         where = topenv(parent.frame())) {
     if(missing(evaluator))
-        XR::serverImport("PythonInterface", ...)
+        XR::serverImport("PythonInterface", ..., where = where)
     else
         evaluator$Import(...)
 }
@@ -324,9 +325,11 @@ pythonImport <- function( ...,  evaluator) {
 #' @param directory the directory to add, defaults to "python"
 #' @param package,pos arguments \code{package} and \code{pos} to the method, usually omitted.
 #' @param evaluator The evaluator object to use. Supplying this argument suppresses the load action.
-pythonAddToPath <- function(directory = "python", package = utils::packageName(topenv(parent.frame())), pos = NA,  evaluator) {
+pythonAddToPath <- function(directory = "python", package = utils::packageName(topenv(parent.frame())), pos = NA,  evaluator,
+                            where = topenv(parent.frame())) {
+
     if(missing(evaluator))
-        XR::serverAddToPath("PythonInterface", directory, package, pos)
+        XR::serverAddToPath("PythonInterface", directory, package, pos, where = where)
     else
         evaluator$AddToPath(directory, package, pos)
 }
