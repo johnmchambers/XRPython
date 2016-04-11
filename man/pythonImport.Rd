@@ -5,10 +5,11 @@
 \alias{pythonImport}
 \title{Import a Python module or add a directory to the Python Search Path}
 \usage{
-pythonImport(..., evaluator)
+pythonImport(..., evaluator, where = topenv(parent.frame()))
 
 pythonAddToPath(directory = "python",
-  package = utils::packageName(topenv(parent.frame())), pos = NA, evaluator)
+  package = utils::packageName(topenv(parent.frame())), pos = NA, evaluator,
+  where = topenv(parent.frame()))
 }
 \arguments{
 \item{...}{arguments for the \code{$Import()} method. See the method documentation for details.}

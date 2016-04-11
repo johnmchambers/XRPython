@@ -4,11 +4,13 @@
 \alias{functions}
 \alias{pythonCall}
 \alias{pythonCommand}
+\alias{pythonDefine}
 \alias{pythonEval}
 \alias{pythonGet}
 \alias{pythonName}
 \alias{pythonSend}
 \alias{pythonSerialize}
+\alias{pythonShell}
 \alias{pythonSource}
 \alias{pythonUnserialize}
 \title{Function Versions of Methods for Python Interface evaluators.}
@@ -19,11 +21,15 @@ pythonEval(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
 
 pythonCommand(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
 
-pythonCall(expr, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+pythonCall(fun, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
 
 pythonGet(object, evaluator = XR::getInterface(.PythonInterfaceClass))
 
-pythonSource(..., evaluator = RPython())
+pythonSource(filename, ...,
+  evaluator = XR::getInterface(.PythonInterfaceClass))
+
+pythonDefine(text, file, ...,
+  evaluator = XR::getInterface(.PythonInterfaceClass))
 
 pythonSerialize(object, file, append = FALSE,
   evaluator = XR::getInterface(.PythonInterfaceClass))
@@ -32,13 +38,35 @@ pythonUnserialize(file, all = FALSE,
   evaluator = XR::getInterface(.PythonInterfaceClass))
 
 pythonName(object)
+
+pythonShell(..., evaluator = XR::getInterface(.PythonInterfaceClass))
 }
 \arguments{
-\item{object}{an R object, to be sent to Python (\code{pythonSend()}) or a proxy object for
-the Python object to be converted (\code{pythonGet()}).}
+\item{object}{For \code{pythonSend()}, an R object, to be sent to Python.  For \code{pythonGet()},
+\code{pythonSerialize()} and \code{pythonNqme()}, a proxy object for
+a Python object.}
 
 \item{evaluator}{The evaluator object to use.  By default, and usually, the current evaluator
 is used, and one is started if none has been.}
+
+\item{expr}{A string for a Python expression or command, with C-style fields (\code{"\%s"}) to be substituted for the following arguments, if any.}
+
+\item{...}{For the evaluation functions: Objects, either R objects to be converted or proxies for Python objects previously computed.
+For other functions, specialized arguments for the corresponding method.
+In particular, \code{.get=} for controlling whether the computed result should be converted.}
+
+\item{fun}{the string name of the function; a module name must be included in the string if the function has
+not been explicitly imported from that module.}
+
+\item{filename}{the file of Python source to be evaluated.}
+
+\item{text,file}{the definition as text or a file to read it from}
+
+\item{file}{a file or open connection.}
+
+\item{append}{should the serializing text be appended to a file; otherwise the file will be truncated on opening.}
+
+\item{all}{should the unserialized object be a list of all serialized objects on the file?}
 }
 \description{
 Function Versions of Methods for Python Interface evaluators.
@@ -48,22 +76,25 @@ Function Versions of Methods for Python Interface evaluators.
 \item \code{pythonSend}: sends the \code{object} to Python, converting it via methods for
 \code{\link[XR]{asServerObject}} and returns a proxy for the converted object.
 
-\item \code{pythonEval}: evaluates the \code{expr} string subsituting the arguments.  See the corresponding evaluator
-method for details.
+\item \code{pythonEval}: evaluates the \code{expr} string subsituting the arguments.
 
 \item \code{pythonCommand}: evaluates the \code{expr} string subsituting the arguments; used for a command that is not
 an expression.
 
-\item \code{pythonCall}: call the function in Python, with arguments given; expr is the string name of the function
+\item \code{pythonCall}: call the function in Python, with arguments given.
 
 \item \code{pythonGet}: converts the proxy object that is its argument to an \R{} object.
 
 \item \code{pythonSource}: evaluate the file of Python source.
+
+\item \code{pythonDefine}: define a Python function
 
 \item \code{pythonSerialize}: serialize the \code{object} in Python, via \code{pickle}
 
 \item \code{pythonUnserialize}: unserialize the file in Python, via \code{pickle}
 
 \item \code{pythonName}: return the name by which this proxy object was assigned in Python
+
+\item \code{pythonShell}: Start an interactive Python shell.  See the chapter file in the documentation, section 14.3.
 }}
 

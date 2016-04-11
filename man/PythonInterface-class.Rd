@@ -57,5 +57,8 @@ backslash to all but the last line.}
 \item{\code{Source(filename)}}{Parse and evaluate the contents of the file.  This method is likely to be overriden for particular langauges
 with a directive to include the contents of the file.  The `XR` version reads the file and processes the entire contents
 as a single string, newlines inserted between lines of the file.}
+
+\item{\code{initialize(...)}}{initializes the evaluator in a language-independent sense.  Should not be called
+until there actually is an evaluator, so that path and import operations can take place}
 }}
 

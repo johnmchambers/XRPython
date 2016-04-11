@@ -7,7 +7,7 @@ export(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 exportClass(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
 
 export(pythonAddToPath, pythonGet, pythonSend, pythonImport, pythonEval, pythonCommand, pythonDefine,
-       pythonSource, pythonSerialize, pythonUnserialize, pythonName, pythonShell, pythonCall)
+       pythonSource, pythonSerialize, pythonUnserialize, pythonName, pythonShell, pythonCall, pythonTask)
 
 export(setPythonClass)
 

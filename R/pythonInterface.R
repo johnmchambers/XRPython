@@ -10,8 +10,7 @@ PythonInterface <- setRefClass("PythonInterface",
                                      operators = "character",
                                      engine = "ANY"
                                  )
-                              )
-
+                               )
 PythonInterface$methods(
     initialize = function(...) {
         'On the first call, adds the python directory of this package to the search path in Python,
@@ -23,16 +22,6 @@ and imports the Python functions used in the interface methods.'
         modules <<- new.env(parent = emptyenv())
         operators <<- .pythonOperators
         firstTime <- is.null(XR::getInterface(class(.self), .makeNew = FALSE))
-        if(firstTime) {
-            ## execute some low-level commands the first time
-            PythonCommand("import sys")
-            AddToPath()
-            PythonCommand(
-                "from RPython import getMethods, classStructure, arglist_for_R, function_for_R, objectFromJSON"
-            )
-            PythonCommand(
-                "from RPython import value_for_R, del_for_R, pickle_for_R, unpickle_for_R, start_unpickle, end_unpickle, vectorR")
-        }
         callSuper(...)
      },
     ServerEval = function(strings, key = "", get = NA) {
@@ -242,7 +231,7 @@ pythonSend <- function(object, evaluator = XR::getInterface(.PythonInterfaceClas
 #' @describeIn functions
 #' evaluates the \code{expr} string subsituting the arguments.
 #'
-#' @param expr A string for a Python expression or command, with C-style fields (\code{"%s"}) to be substituted for the following arguments, if any.
+#' @param expr A string for a Python expression or command, with C-style fields (\code{"\%s"}) to be substituted for the following arguments, if any.
 #' @param ... For the evaluation functions: Objects, either R objects to be converted or proxies for Python objects previously computed.
 #' For other functions, specialized arguments for the corresponding method.
 #' In particular, \code{.get=} for controlling whether the computed result should be converted.
@@ -319,6 +308,18 @@ pythonImport <- function( ...,  evaluator,
         evaluator$Import(...)
 }
 
+#' Register an Evaluator Command or Expression at Initialization
+#'
+#' An unevalated command or expression for the interface is supplied, typically using
+#' \code{quote()} or \code{substitute}.  When an evaluator from the class is created, this
+#' command will be evaluated.  Repeated calls to this function, to \code{serverAddToPath()}
+#' and to \code{serverImport()} will evaluate the corresponding requests, in the order in
+#' which the corresponding calls took place (typically in the source of a pacakage).
+#'
+#' @param command an \emph{unevaluated} command or expression for the evaluator.
+pythonTask <- function(command)
+    XR::serverTask("PythonInterface", command)
+
 #' @describeIn pythonImport
 #' adds the directory specified to the search path for future Python objects.
 #'
@@ -333,6 +334,20 @@ pythonAddToPath <- function(directory = "python", package = utils::packageName(t
     else
         evaluator$AddToPath(directory, package, pos)
 }
+
+## the path and import requirements
+## first, a low-level action to import "sys"
+XR::serverTask("PythonInterface", quote(PythonCommand("import sys")))
+
+pythonAddToPath()
+XR::serverTask("PythonInterface", quote(PythonCommand(
+                "from RPython import getMethods, classStructure, arglist_for_R, function_for_R, objectFromJSON"))
+            )
+XR::serverTask("PythonInterface", quote(PythonCommand(
+                "from RPython import value_for_R, del_for_R, pickle_for_R, unpickle_for_R, start_unpickle, end_unpickle, vectorR")))
+
+pythonImport("RPython", "getMethods", "classStructure", "arglist_for_R", "function_for_R", "objectFromJSON")
+pythonImport("RPython", "value_for_R", "del_for_R", "pickle_for_R", "unpickle_for_R", "start_unpickle", "end_unpickle", "vectorR")
 
 ## Conditionally arrange to use XML package to send XML objects
 ns <- tryCatch(loadNamespace("XML"), error = function(e) NULL)
