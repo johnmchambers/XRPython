@@ -1,28 +1,24 @@
 
 #' An Interface to Python
 #'
-#' The PythonInterface class provides an evaluator for computations in Python, following the structure
+#' The \code{"PythonInterface"} class provides an evaluator for computations in Python, following the structure
 #' in the XR  package.  Proxy functions and classes allow use of the interface with no explicit
 #' reference to the evaluator.  The function \code{RPython()} returns an evaluator object.
+#'
+#' The class extends the \code{"Interface"} class in the XR package and has the same fields.
+#' Python-specific methods use the rPython low-level interface.  See the Chapter from the
+#'  \dQuote{Extending R} book in the documents for this package for details.
 PythonInterface <- setRefClass("PythonInterface",
-                                 contains = "Interface",
-                                 fields = list(
-                                     operators = "character",
-                                     engine = "ANY"
-                                 )
+                                 contains = "Interface"
                                )
 PythonInterface$methods(
     initialize = function(...) {
-        'On the first call, adds the python directory of this package to the search path in Python,
-and imports the Python functions used in the interface methods.'
         languageName <<- "Python"
         obj <- PythonObject()
         obj$.ev <- .self
         prototypeObject <<- obj
         modules <<- new.env(parent = emptyenv())
-        operators <<- .pythonOperators
-        firstTime <- is.null(XR::getInterface(class(.self), .makeNew = FALSE))
-        callSuper(...)
+        callSuper(...) # allow user override of above
      },
     ServerEval = function(strings, key = "", get = NA) {
              pySend <- { if(is.na(get)) "None"
@@ -192,15 +188,6 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 RPython <- function(...)
     XR::getInterface(.PythonInterfaceClass, ...)
 
-
-.pythonOperators <- c("+", "-", "*", "/", "**", "%", "^", "&", "|", "<", "<<",
-                      ">", ">>", "^")
-# and the assignment forms or "or equal" forms
-.pythonOperators <- c(.pythonOperators,
-                      paste0(.pythonOperators, "="))
-# and some miscellaneous others
-.pythonOperators <- c(.pythonOperators, "<>", ".=", "~")
-## (we let the Python parser handle which have unary forms or not)
 
 #' Proxy Objects in R for Python Objects
 #'
