@@ -1,6 +1,6 @@
 
 #' An Interface to Python
-#'
+#' 
 #' The \code{"PythonInterface"} class provides an evaluator for computations in Python, following the structure
 #' in the XR  package.  Proxy functions and classes allow use of the interface with no explicit
 #' reference to the evaluator.  The function \code{RPython()} returns an evaluator object.
@@ -9,10 +9,10 @@
 #' Python-specific methods use the rPython low-level interface.  See the Chapter from the
 #'  \dQuote{Extending R} book in the documents for this package for details.
 PythonInterface <- setRefClass("PythonInterface",
-                                 contains = "Interface"
-                               )
-PythonInterface$methods(
+                                 contains = "Interface",
+                               methods = list(
     initialize = function(...) {
+       'The Python version, with special defaults for prototypeObject and modules'
         languageName <<- "Python"
         obj <- PythonObject()
         obj$.ev <- .self
@@ -21,6 +21,7 @@ PythonInterface$methods(
         callSuper(...) # allow user override of above
      },
     ServerEval = function(strings, key = "", get = NA) {
+       'The Python version using value_for_R()'
              pySend <- { if(is.na(get)) "None"
                           else if(get) "True"
                           else "False"}
@@ -34,9 +35,11 @@ PythonInterface$methods(
              XR::valueFromServer(string, key, get, .self)
          },
     ServerClassDef = function(Class, module = "", example = TRUE ) {
+       'The Python version using PythonClassDef()'
         PythonClassDef(Class,  module, example, evaluator = .self)
     },
     ServerFunctionDef = function(name, module ="") {
+       'The Python version using PythonFunction()'
         PythonFunction(name, module, .ev = .self)
     },
     Define = function(text, file) {
@@ -71,6 +74,7 @@ the first line of the text.'
         Command("execfile(%s)", filename)
     },
     ServerRemove = function(key) {
+       'The Python version using del_for_R())'
         Eval("del_for_R(%s)", key, .get = TRUE)
     },
     PythonCommand = function(strings) {
@@ -83,7 +87,8 @@ since it does no error checking; use $Command() instead.'
 Serialization does not rely on the R equivalent object.'
         Command("pickle_for_R(%s, %s)", key, file)
     },
-    ServerUnserialize = function(file, all) {
+                                   ServerUnserialize = function(file, all) {
+       'The Python unserialize using unpickle'
         value <- Eval("start_unpickle(%s)", file, .get = FALSE)
         on.exit(Command("end_unpickle()"))
         repeat {
@@ -97,6 +102,7 @@ Serialization does not rely on the R equivalent object.'
         value
     },
     ServerAddToPath = function(serverDirectory, serverPos) {
+       'The Python version using sys.path.append()'
         if(is.na(serverPos))
           PythonCommand(paste0("sys.path.append(", shQuote(serverDirectory), ")"))
         else
@@ -174,7 +180,7 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
         code <- paste0("getMethods(",  ClassName, ")")
         Eval(code, .get = TRUE)
     }
-)
+))
 
 .PythonInterfaceClass <- getClass("PythonInterface")
 

@@ -6,9 +6,14 @@
 \alias{PythonInterface-class}
 \title{An Interface to Python}
 \description{
-The PythonInterface class provides an evaluator for computations in Python, following the structure
+The \code{"PythonInterface"} class provides an evaluator for computations in Python, following the structure
 in the XR  package.  Proxy functions and classes allow use of the interface with no explicit
 reference to the evaluator.  The function \code{RPython()} returns an evaluator object.
+}
+\details{
+The class extends the \code{"Interface"} class in the XR package and has the same fields.
+Python-specific methods use the rPython low-level interface.  See the Chapter from the
+ \dQuote{Extending R} book in the documents for this package for details.
 }
 \section{Methods}{
 
