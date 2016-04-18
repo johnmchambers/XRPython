@@ -206,13 +206,17 @@ PythonObject <- setRefClass("PythonObject",
                             contains = "ProxyClassObject")
 
 #' Function Versions of Methods for Python Interface evaluators.
-#'
+#' 
+#' These functions allow application code to invoke evaluator methods for essentially all basic computations.   Usually, they access
+#' the current Python evaluator, starting one if none exists.  For details, see the documentation for the corresponding method, under
+#' \link{PythonInterface}.
 #' @name functions
 #' @param object For \code{pythonSend()}, an R object, to be sent to Python.  For \code{pythonGet()},
 #' \code{pythonSerialize()} and \code{pythonNqme()}, a proxy object for
 #' a Python object.
 #' @param evaluator The evaluator object to use.  By default, and usually, the current evaluator
 #' is used, and one is started if none has been.
+#' @param file A filename or an open connection, for reading or writing depending on the function
 NULL
 
 #' @describeIn functions
@@ -251,19 +255,17 @@ pythonGet <- function(object,  evaluator = XR::getInterface(.PythonInterfaceClas
 
 #' @describeIn functions
 #' evaluate the file of Python source.
-#' @param filename the file of Python source to be evaluated.
-pythonSource <- function(filename, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
-    evaluator$Source(filename, ...)
+pythonSource <- function(file, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
+    evaluator$Source(file, ...)
 
 #' @describeIn functions
 #' define a Python function
-#' @param text,file  the definition as text or a file to read it from
+#' @param text  the definition as text (supply argument  file= instead  to read it from a file)
 pythonDefine <- function(text, file, ..., evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Define(text, file, ...)
 
 #' @describeIn functions
 #' serialize the \code{object} in Python, via \code{pickle}
-#' @param file a file or open connection.
 #' @param append should the serializing text be appended to a file; otherwise the file will be truncated on opening.
 pythonSerialize <- function(object,  file, append = FALSE, evaluator = XR::getInterface(.PythonInterfaceClass))
     evaluator$Serialize(object, file, append)
@@ -286,12 +288,17 @@ pythonShell <- function(..., evaluator = XR::getInterface(.PythonInterfaceClass)
 
 #' Import a Python module or add a directory to the Python Search Path
 #'
-#' adds the module information specified to the modules imported for Python evaluators.
-#'
 #' If called from the source directory of a package during installation, both \code{pythonImport}
 #' and \code{pythonAddToPath()} also set up
 #' a load action for that package.  The functional versions, not the methods themselves, should
 #' be called from package source files to ensure that the load actions are created.
+#' @param evaluator The evaluator object to use. Supplying this argument suppresses the load action.
+#' @name Modules
+NULL
+
+#' describeIn Modules
+#'
+#' Add the module and name information specified to the objects imported for Python evaluators.
 #' @param ...  arguments for the \code{$Import()} method. See the method documentation for details.
 pythonImport <- function( ...,  evaluator,
                          where = topenv(parent.frame())) {
@@ -313,12 +320,11 @@ pythonImport <- function( ...,  evaluator,
 pythonTask <- function(command)
     XR::serverTask("PythonInterface", command)
 
-#' @describeIn pythonImport
-#' adds the directory specified to the search path for future Python objects.
+#' @describeIn Modules
+#' Add the directory specified to the search path for future Python objects.
 #'
 #' @param directory the directory to add, defaults to "python"
 #' @param package,pos arguments \code{package} and \code{pos} to the method, usually omitted.
-#' @param evaluator The evaluator object to use. Supplying this argument suppresses the load action.
 pythonAddToPath <- function(directory = "python", package = utils::packageName(topenv(parent.frame())), pos = NA,  evaluator,
                             where = topenv(parent.frame())) {
 
