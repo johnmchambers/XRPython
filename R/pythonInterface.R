@@ -296,7 +296,7 @@ pythonShell <- function(..., evaluator = XR::getInterface(.PythonInterfaceClass)
 #' @name Modules
 NULL
 
-#' describeIn Modules
+#' @describeIn Modules
 #'
 #' Add the module and name information specified to the objects imported for Python evaluators.
 #' @param ...  arguments for the \code{$Import()} method. See the method documentation for details.
