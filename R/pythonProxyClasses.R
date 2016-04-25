@@ -1,202 +1,236 @@
-### Proxy Classes for some basic Python classes: list, dict
+#' Proxy Class for Python Lists
+#' 
+#' This class is a proxy for ordinary list objects in Python.  All the
+#' standard Python methods for such objects (e.g., \code{append()}) are
+#' available, but methods for R functions are not implemented.
+list_Python <- setRefClass("list_Python", fields = character())
 
 list_Python <- XR::setProxyClass("list", module = "",
-    evaluatorClass = "PythonInterface", language = "Python",
-    fields = character(), methods = list()
+    evaluatorClass = "PythonInterface", language = "Python", proxyObjectClass = "PythonObject",
+    methods = list(), fields = character()
     )
 
 list_Python$methods(
-ServerClassInfo = function ()
+initialize = function (..., evaluator, .serverObject) 
 {
-    list(ServerClass = "list", ServerModule = "", language = "Python",
-        evaluatorClass = "PythonInterface")
-},
-
-append = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "append", ...)
-},
-
-count = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "count", ...)
-},
-
-extend = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "extend", ...)
-},
-
-index = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "index", ...)
-},
-
-initialize = function (..., evaluator, .serverObject)
-{
-    if (missing(evaluator))
+    if (missing(evaluator)) 
         evaluator <- XR::getInterface("PythonInterface")
     if (missing(.serverObject)) {
         NULL
         .serverObject <- evaluator$New("list", "", ...)
     }
-    if (is(.serverObject, "ProxyClassObject"))
+    if (is(.serverObject, "ProxyClassObject")) 
         proxy <- .serverObject$.proxyObject
     else proxy <- .serverObject
     .proxyObject <<- proxy
     .ev <<- evaluator
 },
 
-insert = function (..., .ev = XRPython::RPython())
+ServerClassInfo = function () 
+list(ServerClass = "list", ServerModule = "", language = "Python", 
+    evaluatorClass = "PythonInterface", proxyFields = NULL, proxyMethods = c("initialize", 
+    "ServerClassInfo", "append", "count", "extend", "index", 
+    "insert", "pop", "remove", "reverse", "sort"), proxyContains = character(0), 
+    proxyObjectClass = "PythonObject"),
+
+append = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "insert", ...)
+    "Python Documentation: L.append(object) -- append object to end"
+    .ev$MethodCall(.proxyObject, "append", ..., .get = .get)
 },
 
-pop = function (..., .ev = XRPython::RPython())
+count = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "pop", ...)
+    "Python Documentation: L.count(value) -> integer -- return number of occurrences of value"
+    .ev$MethodCall(.proxyObject, "count", ..., .get = .get)
 },
 
-remove = function (..., .ev = XRPython::RPython())
+extend = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "remove", ...)
+    "Python Documentation: L.extend(iterable) -- extend list by appending elements from the iterable"
+    .ev$MethodCall(.proxyObject, "extend", ..., .get = .get)
 },
 
-reverse = function (..., .ev = XRPython::RPython())
+index = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "reverse", ...)
+    "Python Documentation: L.index(value, [start, [stop]]) -> integer -- return first index of value.\nRaises ValueError if the value is not present."
+    .ev$MethodCall(.proxyObject, "index", ..., .get = .get)
 },
 
-sort = function (..., .ev = XRPython::RPython())
+insert = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "sort", ...)
+    "Python Documentation: L.insert(index, object) -- insert object before index"
+    .ev$MethodCall(.proxyObject, "insert", ..., .get = .get)
+},
+
+pop = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: L.pop([index]) -> item -- remove and return item at index (default last).\nRaises IndexError if list is empty or index is out of range."
+    .ev$MethodCall(.proxyObject, "pop", ..., .get = .get)
+},
+
+remove = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: L.remove(value) -- remove first occurrence of value.\nRaises ValueError if the value is not present."
+    .ev$MethodCall(.proxyObject, "remove", ..., .get = .get)
+},
+
+reverse = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: L.reverse() -- reverse *IN PLACE*"
+    .ev$MethodCall(.proxyObject, "reverse", ..., .get = .get)
+},
+
+sort = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: L.sort(cmp=None, key=None, reverse=False) -- stable sort *IN PLACE*;\ncmp(x, y) -> -1, 0, 1"
+    .ev$MethodCall(.proxyObject, "sort", ..., .get = .get)
 })
 
 
+#' Proxy Class for Python Dictionaries
+#' 
+#' This class is a proxy for ordinary dictionary objects in Python.  All the
+#' standard Python methods for such objects (e.g., \code{keys()}) are
+#' available, but methods for R functions are not implemented.
+dict_Python <- setRefClass("dict_Python", fields = character())
+
 dict_Python <- XR::setProxyClass("dict", module = "",
-    evaluatorClass = "PythonInterface", language = "Python",
-    fields = character(), methods = list()
+    evaluatorClass = "PythonInterface", language = "Python", proxyObjectClass = "PythonObject",
+    methods = list(), fields = character()
     )
 
 dict_Python$methods(
-ServerClassInfo = function ()
+initialize = function (..., evaluator, .serverObject) 
 {
-    list(ServerClass = "dict", ServerModule = "", language = "Python",
-        evaluatorClass = "PythonInterface")
-},
-
-clear = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "clear", ...)
-},
-
-copy = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "copy", ...)
-},
-
-fromkeys = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "fromkeys", ...)
-},
-
-get = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "get", ...)
-},
-
-has_key = function (..., .ev = XRPython::RPython())
-{
-    .ev$MethodCall(.proxyObject, "has_key", ...)
-},
-
-initialize = function (..., evaluator, .serverObject)
-{
-    if (missing(evaluator))
+    if (missing(evaluator)) 
         evaluator <- XR::getInterface("PythonInterface")
     if (missing(.serverObject)) {
         NULL
         .serverObject <- evaluator$New("dict", "", ...)
     }
-    if (is(.serverObject, "ProxyClassObject"))
+    if (is(.serverObject, "ProxyClassObject")) 
         proxy <- .serverObject$.proxyObject
     else proxy <- .serverObject
     .proxyObject <<- proxy
     .ev <<- evaluator
 },
 
-items = function (..., .ev = XRPython::RPython())
+ServerClassInfo = function () 
+list(ServerClass = "dict", ServerModule = "", language = "Python", 
+    evaluatorClass = "PythonInterface", proxyFields = NULL, proxyMethods = c("initialize", 
+    "ServerClassInfo", "clear", "copy", "fromkeys", "get", "has_key", 
+    "items", "iteritems", "iterkeys", "itervalues", "keys", "pop", 
+    "popitem", "setdefault", "update", "values", "viewitems", 
+    "viewkeys", "viewvalues"), proxyContains = character(0), 
+    proxyObjectClass = "PythonObject"),
+
+clear = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "items", ...)
+    "Python Documentation: D.clear() -> None.  Remove all items from D."
+    .ev$MethodCall(.proxyObject, "clear", ..., .get = .get)
 },
 
-iteritems = function (..., .ev = XRPython::RPython())
+copy = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "iteritems", ...)
+    "Python Documentation: D.copy() -> a shallow copy of D"
+    .ev$MethodCall(.proxyObject, "copy", ..., .get = .get)
 },
 
-iterkeys = function (..., .ev = XRPython::RPython())
+fromkeys = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "iterkeys", ...)
+    "Python Documentation: dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.\nv defaults to None."
+    .ev$MethodCall(.proxyObject, "fromkeys", ..., .get = .get)
 },
 
-itervalues = function (..., .ev = XRPython::RPython())
+get = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "itervalues", ...)
+    "Python Documentation: D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None."
+    .ev$MethodCall(.proxyObject, "get", ..., .get = .get)
 },
 
-keys = function (..., .ev = XRPython::RPython())
+has_key = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "keys", ...)
+    "Python Documentation: D.has_key(k) -> True if D has a key k, else False"
+    .ev$MethodCall(.proxyObject, "has_key", ..., .get = .get)
 },
 
-pop = function (..., .ev = XRPython::RPython())
+items = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "pop", ...)
+    "Python Documentation: D.items() -> list of D's (key, value) pairs, as 2-tuples"
+    .ev$MethodCall(.proxyObject, "items", ..., .get = .get)
 },
 
-popitem = function (..., .ev = XRPython::RPython())
+iteritems = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "popitem", ...)
+    "Python Documentation: D.iteritems() -> an iterator over the (key, value) items of D"
+    .ev$MethodCall(.proxyObject, "iteritems", ..., .get = .get)
 },
 
-setdefault = function (..., .ev = XRPython::RPython())
+iterkeys = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "setdefault", ...)
+    "Python Documentation: D.iterkeys() -> an iterator over the keys of D"
+    .ev$MethodCall(.proxyObject, "iterkeys", ..., .get = .get)
 },
 
-update = function (..., .ev = XRPython::RPython())
+itervalues = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "update", ...)
+    "Python Documentation: D.itervalues() -> an iterator over the values of D"
+    .ev$MethodCall(.proxyObject, "itervalues", ..., .get = .get)
 },
 
-values = function (..., .ev = XRPython::RPython())
+keys = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "values", ...)
+    "Python Documentation: D.keys() -> list of D's keys"
+    .ev$MethodCall(.proxyObject, "keys", ..., .get = .get)
 },
 
-viewitems = function (..., .ev = XRPython::RPython())
+pop = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "viewitems", ...)
+    "Python Documentation: D.pop(k[,d]) -> v, remove specified key and return the corresponding value.\nIf key is not found, d is returned if given, otherwise KeyError is raised"
+    .ev$MethodCall(.proxyObject, "pop", ..., .get = .get)
 },
 
-viewkeys = function (..., .ev = XRPython::RPython())
+popitem = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "viewkeys", ...)
+    "Python Documentation: D.popitem() -> (k, v), remove and return some (key, value) pair as a\n2-tuple; but raise KeyError if D is empty."
+    .ev$MethodCall(.proxyObject, "popitem", ..., .get = .get)
 },
 
-viewvalues = function (..., .ev = XRPython::RPython())
+setdefault = function (..., .ev = XRPython::RPython(), .get = NA) 
 {
-    .ev$MethodCall(.proxyObject, "viewvalues", ...)
+    "Python Documentation: D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D"
+    .ev$MethodCall(.proxyObject, "setdefault", ..., .get = .get)
+},
+
+update = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: D.update([E, ]**F) -> None.  Update D from dict/iterable E and F.\nIf E present and has a .keys() method, does:     for k in E: D[k] = E[k]\nIf E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v\nIn either case, this is followed by: for k in F: D[k] = F[k]"
+    .ev$MethodCall(.proxyObject, "update", ..., .get = .get)
+},
+
+values = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: D.values() -> list of D's values"
+    .ev$MethodCall(.proxyObject, "values", ..., .get = .get)
+},
+
+viewitems = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: D.viewitems() -> a set-like object providing a view on D's items"
+    .ev$MethodCall(.proxyObject, "viewitems", ..., .get = .get)
+},
+
+viewkeys = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: D.viewkeys() -> a set-like object providing a view on D's keys"
+    .ev$MethodCall(.proxyObject, "viewkeys", ..., .get = .get)
+},
+
+viewvalues = function (..., .ev = XRPython::RPython(), .get = NA) 
+{
+    "Python Documentation: D.viewvalues() -> an object providing a view on D's values"
+    .ev$MethodCall(.proxyObject, "viewvalues", ..., .get = .get)
 })
 
-### FIXME:  this seems innocuous, but breaks source("EvalEx1.S") in XRPython
 
-## for( type in c("integer", "numeric", "logical", "character"))
-## {
-##     def <- eval(substitute(function(from)
-##               pythonCall("vectorR", from, TYPE, .get = TRUE), list(TYPE = type)))
-##     setAs("list_Python", type,
-##           def,
-##           function(from, value) stop("Type change not meaningful for \"list_Python"))
-## }

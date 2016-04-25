@@ -248,19 +248,18 @@ allIndices <- function(k) {
 #' An object from this class is an R function that is a proxy for a function in Python. Calls to the R function evaluate
 #' a call to the Python function.  The arguments in the call are converted to equivalent Python objects;
 #' these typically include proxy objects for results previously computed through the XRPython interface.
-#' @slot pyDocs the docstring from Python, if any.
-#'
-#' @slot pyArgs the Python argument names.
 #' @slot name the name of the server language function
 #' @slot module the name of the module, if that needs to be imported
 #' @slot evaluatorClass the class for the evaluator, by default and usually, \code{\link{PythonInteface}}
+#' @slot serverDoc the docstring from Python, if any.
+#'
+#' @slot serverArgs the Python argument names (not currently used).
 PythonFunction <- setClass("PythonFunction",
-                           slots = c(pyDocs = "character", pyArgs = "character"),
                            contains = "ProxyFunction")
 
 setMethod("initialize", "PythonFunction",
           function(.Object, name, module = "", method = "", ...,
-                   save = FALSE, objName = name, .ev = RPython()){
+                   .ev = RPython()){
               ## the escape to avoid requiring Python:  work
               ## up through XR::ProxyFunction to set slots directly
               if(methods::hasArg(".Data"))
@@ -296,14 +295,12 @@ setMethod("initialize", "PythonFunction",
                   opt <- seq_len(n) > nreq & args != "..."
                   args <- paste0(args, ifelse(opt, " =",""))
               }
-              .Object@pyArgs <- args
+              .Object@serverArgs <- args
               .Object@name <- name
               .Object@module <- module
               .Object@evaluatorClass <- class(.ev)
-              .Object@pyDocs <- as.character(.ev$Eval(gettextf("inspect.getdoc(%s)", fname), .get = TRUE))
-              if(!identical(save, FALSE))
-                  .ev$SaveProxyFunction(save, .Object, objName)
-              .Object
+              .Object@serverDoc <- as.character(.ev$Eval(gettextf("inspect.getdoc(%s)", fname), .get = TRUE))
+              callNextMethod(.Object, name, module, .Data = f, evaluator = .ev, ...)
           })
 
 setMethod("show", "PythonFunction",

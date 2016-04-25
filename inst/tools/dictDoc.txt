@@ -1,0 +1,5 @@
+Proxy Class for Python Dictionaries
+
+This class is a proxy for ordinary dictionary objects in Python.  All the
+standard Python methods for such objects (e.g., \code{keys()}) are
+available, but methods for R functions are not implemented.

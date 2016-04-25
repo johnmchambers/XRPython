@@ -1,0 +1,5 @@
+Proxy Class for Python Lists
+
+This class is a proxy for ordinary list objects in Python.  All the
+standard Python methods for such objects (e.g., \code{append()}) are
+available, but methods for R functions are not implemented.
