@@ -2,4 +2,8 @@ Proxy Class for Python Lists
 
 This class is a proxy for ordinary list objects in Python.  All the
 standard Python methods for such objects (e.g., \code{append()}) are
-available, but methods for R functions are not implemented.
+available, but methods for R functions such as \code{]} are not
+implemented because Python operators do not behave functionally.
+
+Instead, additional methods are defined for the proxy lists, e.g.,
+\code{el(i)}.
