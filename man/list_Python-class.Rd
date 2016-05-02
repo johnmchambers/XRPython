@@ -8,7 +8,10 @@
 \description{
 This class is a proxy for ordinary list objects in Python.  All the
 standard Python methods for such objects (e.g., \code{append()}) are
-available, but methods for R functions are not implemented.
+available, but methods for R functions such as \code{]} are not
+implemented because Python operators do not behave functionally.
+Instead, additional methods are defined for the proxy lists, e.g.,
+\code{el(i)}.
 }
 \section{Methods}{
 
@@ -16,6 +19,9 @@ available, but methods for R functions are not implemented.
 \item{\code{append(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.append(object) -- append object to end}
 
 \item{\code{count(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.count(value) -> integer -- return number of occurrences of value}
+
+\item{\code{el(i)}}{Extract an element from the list (zero based indexing).
+The index will be coerced to integer (unless a proxy).}
 
 \item{\code{extend(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.extend(iterable) -- extend list by appending elements from the iterable}
 
