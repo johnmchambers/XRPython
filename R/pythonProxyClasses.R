@@ -98,7 +98,7 @@ list_Python$methods(
 The index will be coerced to integer (unless a proxy).'
         if(is.numeric(i))
             i <- as.integer(i)
-        Eval("%s[%s]", .self, i)
+        .ev$Eval("%s[%s]", .self, i)
     }
 )
 #' Proxy Class for Python Dictionaries
