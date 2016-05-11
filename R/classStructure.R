@@ -259,11 +259,11 @@ PythonFunction <- setClass("PythonFunction",
 
 setMethod("initialize", "PythonFunction",
           function(.Object, name, module = "", method = "", ...,
-                   .ev = RPython()){
+                   .ev = RPython(), .get = NA){
               ## the escape to avoid requiring Python:  work
               ## up through XR::ProxyFunction to set slots directly
               if(methods::hasArg(".Data"))
-                  return(callNextMethod(.Object, name = name, module = module, ...))
+                  return(callNextMethod(.Object, name = name, module = module, ..., .get = .get))
               if(missing(name))
                   return(.Object) # the no-arguments case
               if(nzchar(method)) { # should be the server expr for the object
@@ -285,7 +285,7 @@ setMethod("initialize", "PythonFunction",
               .ev$Import("RPython")
               .ev$Import("inspect")
               info <- .ev$Eval(gettextf("function_for_R(%s)",fname), .get = TRUE)
-              f <- .proxyFun(name, fname, module, method, info)
+              f <- .proxyFun(name, fname, module, method, info, .get)
               environment(f) <- environment(.Object@.Data)
               .Object@.Data  <- f
               args <- as.character(info$args)
@@ -300,7 +300,7 @@ setMethod("initialize", "PythonFunction",
               .Object@module <- module
               .Object@evaluatorClass <- class(.ev)
               .Object@serverDoc <- as.character(.ev$Eval(gettextf("inspect.getdoc(%s)", fname), .get = TRUE))
-              callNextMethod(.Object, name, module, .Data = f, evaluator = .ev, ...)
+              callNextMethod(.Object, name, module, .Data = f, evaluator = .ev, ..., .get = .get)
           })
 
 setMethod("show", "PythonFunction",
@@ -310,7 +310,7 @@ setMethod("show", "PythonFunction",
               show(object@.Data)
           })
 
-.proxyFun <- function(name, fname, module, method, info) {
+.proxyFun <- function(name, fname, module, method, info, .get) {
     args <- as.character(info$args)
     n <- length(args)
     nopt <- info$nopt
@@ -328,7 +328,7 @@ setMethod("show", "PythonFunction",
     }
     else
         moduleText <- ""
-    text <- "function(..., .ev = XRPython::RPython(), .get = NA) {"
+    text <- gettextf("function(..., .ev = XRPython::RPython(), .get = %s) {", .get)
     if(nopt < n || !info$dots)
         text <- c(text, "    nPyArgs <- nargs() - !missing(.ev)")
     if(nopt < n) {
