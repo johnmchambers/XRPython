@@ -330,7 +330,7 @@ setMethod("show", "PythonFunction",
         moduleText <- ""
     text <- gettextf("function(..., .ev = XRPython::RPython(), .get = %s) {", .get)
     if(nopt < n || !info$dots)
-        text <- c(text, "    nPyArgs <- nargs() - !missing(.ev)")
+        text <- c(text, "    nPyArgs <- length(substitute(c(...)))-1")
     if(nopt < n) {
         nreq <- as.integer(n - nopt)
         text <- c(text, gettextf(
