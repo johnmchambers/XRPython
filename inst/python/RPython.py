@@ -280,7 +280,7 @@ def toR_dict(obj):
             value = "{0}{1} : {2}".format(value, toR(keyi), toR(obj[keyi]))
     return "{0}{1}".format(value, '}')
 
-def toR_class(obj, typename, module):
+def toR_class(obj, typename = type(obj).__name__, module = obj.__module__):
     value = R_Object("from_Python", "XRPython")
     value["serverClass"] = typename
     value["module"] = module
