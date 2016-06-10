@@ -361,6 +361,18 @@ if(!is.null(ns)) {
           })
 }
 
+## Correct JSON's logical constants: always use objectFromJSON()
+setMethod("asServerObject",
+          c("logical", "PythonObject"),
+          function(object, prototype) {
+               jsonString <- objectAsJSON(object, prototype)
+               if(is(jsonString, "JSONScalar")) # correct logical constant
+                   gettextf("objectFromJSON(%s)",nameQuote(jsonString))
+               else
+                   gettextf("objectFromJSON(%s)",
+                            typeToJSON(jsonString, prototype)) # add escapes in the string
+           })
+
 #' Class for General Python Class Objects
 #'
 #' The Python side of the interface will return a general object from a Python class as an R
