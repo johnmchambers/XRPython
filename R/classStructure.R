@@ -92,8 +92,10 @@
 #' Class and Generator for Python Class Description from Python Metadata
 #'
 #' Creates a class definition object consistent with the XR structure.
-#' See \code{\link{setPythonClass}} for details and arguments to the generator for the class.
+#' @param class,module,example Specification of the class.
+#' See \code{\link{setPythonClass}} for details.
 #' @param evaluator the interface evaluator; by default and usually, the current Python evaluator.
+#' @usage PythonClassDef(Class, module = "", example = TRUE, evaluator = RPython())
 PythonClassDef <- setRefClass("PythonClassDef",
                               fields = list(
                                   className = "character",
@@ -314,10 +316,8 @@ setMethod("show", "PythonFunction",
     args <- as.character(info$args)
     n <- length(args)
     nopt <- info$nopt
-    if(nzchar(method)) {
+    if(nzchar(method))
         callText <- gettextf("    .ev$MethodCall(.proxyObject,%s,..., .get = .get)", shQuote(method))
-        n <- n-1 # get rid of Python's "self" argument
-    }
     else
         callText <- gettextf("    .ev$Call(%s,..., .get = .get)", shQuote(name))
     if(nzchar(module)) {

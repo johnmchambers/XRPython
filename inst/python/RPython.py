@@ -87,14 +87,14 @@ def arglist_for_R(f):
         args.append("...")
     return  args
 
-funClass = type(arglist_for_R) # dear Python:  why is "function" not known as a type?
-
 def function_for_R(f):
     ## some methods, etc are builtin:  we treat those as f(...)
-    if not isinstance(f, funClass):
+    if not ( inspect.isfunction(f) or inspect.ismethod(f) ):
         return {'args' : [ ], 'nopt' : 0 , 'dots' : True }
     ip = inspect.getargspec(f)
     args = ip.args
+    if inspect.ismethod(f):
+        args.pop(0) # drop "self"
     if ip.defaults is None:
         nopt = 0
     else:
