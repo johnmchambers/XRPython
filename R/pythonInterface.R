@@ -18,7 +18,8 @@ PythonInterface <- setRefClass("PythonInterface",
         obj$.ev <- .self
         prototypeObject <<- obj
         modules <<- new.env(parent = emptyenv())
-        callSuper(...) # allow user override of above
+        callSuper(...) # initialize object
+        startupActions() # actions for search path, imports
      },
     ServerEval = function(strings, key = "", get = NA) {
        'The Python version using value_for_R()'
