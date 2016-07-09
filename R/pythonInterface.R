@@ -31,8 +31,8 @@ PythonInterface <- setRefClass("PythonInterface",
                      }
              expr <- gettextf("_R_value = value_for_R(%s, %s, %s)",
                              pyExpr, deparse(key), pySend)
-             rPython::python.exec(expr)
-             string <- rPython::python.get("_R_value")
+             python.exec(expr)
+             string <- python.get("_R_value")
              XR::valueFromServer(string, key, get, .self)
          },
     ServerClassDef = function(Class, module = "", example = TRUE ) {
@@ -81,7 +81,7 @@ the first line of the text.'
     PythonCommand = function(strings) {
         'A low-level command execution, needed for initializing.  Normally should not be used by applications
 since it does no error checking; use $Command() instead.'
-        rPython::python.exec(strings)
+        python.exec(strings)
     },
     ServerSerialize = function(key, file) {
         'Serializing and unserializing in the Python interface use the pickle structure in Python.
@@ -192,6 +192,13 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 #' returned.
 #'
 #' See \code{\link{PythonInterface}} for details of the evaluator.
+#' @param ... arguments to control whether a new evaluator is started.  Normally omitted.
+#' @examples
+#' ev <- RPython()
+#' xx <- ev$Eval("[1, %s, 5]", pi)
+#' xx
+#' xx$append(4.5)
+#' ev$Command("print %s", xx)
 RPython <- function(...)
     XR::getInterface(.PythonInterfaceClass, ...)
 
@@ -300,7 +307,19 @@ NULL
 #' @describeIn Modules
 #'
 #' Add the module and name information specified to the objects imported for Python evaluators.
-#' @param ...  arguments for the \code{$Import()} method. See the method documentation for details.
+#' @param ...,where  arguments for the \code{$Import()} method. See the method documentation for details.
+#' @examples
+#' \dontrun{
+#' ## How to search from a local directory, import a function from a file there
+#' ## and call the function.
+#' ## Including the evaluator argument causes the path change and import to happen
+#' ## right now, not in a package being loaded
+#' ev <- RPython()
+#' pythonAddToPath("/Users/me/myPython/", package = "",
+#'                 evaluator = ev)
+#' pythonImport("funEx", "foo", evaluator = ev)
+#' pythonCall("foo", 1.1, 1.2)
+#' }
 pythonImport <- function( ...,  evaluator,
                          where = topenv(parent.frame())) {
     if(missing(evaluator))
@@ -348,19 +367,6 @@ XR::serverTask("PythonInterface", quote(PythonCommand(
 
 pythonImport("RPython", "getMethods", "classStructure", "arglist_for_R", "function_for_R", "objectFromJSON")
 pythonImport("RPython", "value_for_R", "del_for_R", "pickle_for_R", "unpickle_for_R", "start_unpickle", "end_unpickle", "vectorR")
-
-## Conditionally arrange to use XML package to send XML objects
-ns <- tryCatch(loadNamespace("XML"), error = function(e) NULL)
-if(!is.null(ns)) {
-    setMethod("asServerObject",
-    c("XMLInternalDocument", "PythonObject"),
-          function(object, prototype) {
-              file <- tempfile()
-              XML::saveXML(object, file)
-              gettextf("xml.etree.ElementTree.parse(%s)",
-                       asServerObject(file, prototype))
-          })
-}
 
 ## Correct JSON's logical constants: always use objectFromJSON()
 setMethod("asServerObject",
@@ -414,4 +420,17 @@ setMethod("initialize", "from_Python",
 #' runs \code{roxygenize()}.  Finally, as usual with \code{roxygenize()},
 #' the package has to be installed one more time to generate the actual documentation.
 #' @name setupStep
+NULL
+
+#' Send a Non-scalar Version of an Object
+#'
+#' Ensures that an object is interpreted as a vector (array) when sent to the server language.
+#' The default strategy is to send length-1 vectors as scalars.
+#' Copied from package XR.
+#'
+#' @return the object, but with the S4 bit turned on.
+#' Relies on the convention that XR interfaces leave S4 objects
+#' as vectors, not scalars, even when they are of length 1
+#' @param object A vector object.  Calling with a non-vector is an error.
+#' @name noScalar
 NULL

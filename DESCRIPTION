@@ -1,22 +1,15 @@
 Package: XRPython
 Type: Package
 Title: Structured Interface to Python
-Version: 0.5
-Date: 2015-01-01
+Version: 0.7
+Date: 2015-07-01
 Author: John M. Chambers
 Maintainer: John Chambers <jmc@stat.stanford.edu>
 Description: A Python interface structured according to the general
-    form described in package XR and the book (in progress)
-    "Extending R"
-Collate:
-    pythonInterface.R
-    classStructure.R
-    pythonProxyClasses.R
+    form described in package XR and the book "Extending R".
+Collate: pythonInterface.R classStructure.R pythonProxyClasses.R
 License: GPL (>= 2)
-Imports:
-    methods,
-    XR,
-    rPython
-Packaged: 2015-09-10 13:22:40 UTC; jmc
+Imports: methods, XR, rPython
+Packaged: 2016-07-06 23:56:52 UTC; jmc
 NeedsCompilation: no
 RoxygenNote: 5.0.1

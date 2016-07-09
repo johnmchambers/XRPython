@@ -89,13 +89,12 @@
    c(Class, module)
 }
 
-#' Class and Generator for Python Class Description from Python Metadata
-#'
-#' Creates a class definition object consistent with the XR structure.
-#' @param class,module,example Specification of the class.
-#' See \code{\link{setPythonClass}} for details.
-#' @param evaluator the interface evaluator; by default and usually, the current Python evaluator.
-#' @usage PythonClassDef(Class, module = "", example = TRUE, evaluator = RPython())
+## #' Class and Generator for Python Class Description from Python Metadata
+## #'
+## #' Extends the \code{"ServerClassDef"} class in the XR package.
+## #'
+## #' @field className the name of the Python class
+## #' @field module the name of the Python module
 PythonClassDef <- setRefClass("PythonClassDef",
                               fields = list(
                                   className = "character",
@@ -165,7 +164,7 @@ PythonClassDef$methods(
 #' class.  If omitted, the interface tries to create a standard object from the class by calling the Python
 #' generator with no argument.  Argument \code{example} can also be supplied as \code{FALSE} to suppress
 #' generating the default object.
-#' @param fields,methods arguments to \code{setProxyClass} and usually omitted.
+#' @param fields,methods,where,... arguments to \code{setProxyClass} and usually omitted.
 #' @param ServerClass,contains,proxyObjectClass ditto.
 setPythonClass <- function(Class, module = "",
                            fields = character(), methods = NULL,
@@ -252,7 +251,7 @@ allIndices <- function(k) {
 #' these typically include proxy objects for results previously computed through the XRPython interface.
 #' @slot name the name of the server language function
 #' @slot module the name of the module, if that needs to be imported
-#' @slot evaluatorClass the class for the evaluator, by default and usually, \code{\link{PythonInteface}}
+#' @slot evaluatorClass the class for the evaluator, by default and usually, \code{\link{PythonInterface}}
 #' @slot serverDoc the docstring from Python, if any.
 #'
 #' @slot serverArgs the Python argument names (not currently used).

@@ -1,10 +1,16 @@
 import(XR)
 
-## exportPattern("^[[:alpha:]]+")
+importFrom(methods, is, allNames, new, callNextMethod)
+
+importFrom(rPython, python.exec, python.get)
 
 export(RPython)
-export(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
-exportClass(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
+
+## Don't export PythonClassDef class for now.
+## export(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
+## exportClass(PythonClassDef, PythonFunction, PythonInterface, PythonObject)
+export(PythonFunction, PythonInterface, PythonObject)
+exportClass(PythonFunction, PythonInterface, PythonObject)
 
 export(pythonAddToPath, pythonGet, pythonSend, pythonImport, pythonEval, pythonCommand, pythonDefine,
        pythonSource, pythonSerialize, pythonUnserialize, pythonName, pythonShell, pythonCall, pythonTask)
