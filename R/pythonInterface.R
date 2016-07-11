@@ -31,8 +31,8 @@ PythonInterface <- setRefClass("PythonInterface",
                      }
              expr <- gettextf("_R_value = value_for_R(%s, %s, %s)",
                              pyExpr, deparse(key), pySend)
-             rPython::python.exec(expr)
-             string <- rPython::python.get("_R_value")
+             python.exec(expr)
+             string <- python.get("_R_value")
              XR::valueFromServer(string, key, get, .self)
          },
     ServerClassDef = function(Class, module = "", example = TRUE ) {
@@ -81,7 +81,7 @@ the first line of the text.'
     PythonCommand = function(strings) {
         'A low-level command execution, needed for initializing.  Normally should not be used by applications
 since it does no error checking; use $Command() instead.'
-        rPython::python.exec(strings)
+        python.exec(strings)
     },
     ServerSerialize = function(key, file) {
         'Serializing and unserializing in the Python interface use the pickle structure in Python.
@@ -192,6 +192,7 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 #' returned.
 #'
 #' See \code{\link{PythonInterface}} for details of the evaluator.
+#' @param ... arguments to control whether a new evaluator is started.  Normally omitted.
 RPython <- function(...)
     XR::getInterface(.PythonInterfaceClass, ...)
 
@@ -300,7 +301,7 @@ NULL
 #' @describeIn Modules
 #'
 #' Add the module and name information specified to the objects imported for Python evaluators.
-#' @param ...  arguments for the \code{$Import()} method. See the method documentation for details.
+#' @param ...,where  arguments for the \code{$Import()} method. See the method documentation for details.
 pythonImport <- function( ...,  evaluator,
                          where = topenv(parent.frame())) {
     if(missing(evaluator))
@@ -414,4 +415,17 @@ setMethod("initialize", "from_Python",
 #' runs \code{roxygenize()}.  Finally, as usual with \code{roxygenize()},
 #' the package has to be installed one more time to generate the actual documentation.
 #' @name setupStep
+NULL
+
+#' Send a Non-scalar Version of an Object
+#'
+#' Ensures that an object is interpreted as a vector (array) when sent to the server language.
+#' The default strategy is to send length-1 vectors as scalars.
+#' Copied from package XR.
+#'
+#' @return the object, but with the S4 bit turned on.
+#' Relies on the convention that XR interfaces leave S4 objects
+#' as vectors, not scalars, even when they are of length 1
+#' @param object A vector object.  Calling with a non-vector is an error.
+#' @name noScalar
 NULL

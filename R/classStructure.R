@@ -165,7 +165,7 @@ PythonClassDef$methods(
 #' class.  If omitted, the interface tries to create a standard object from the class by calling the Python
 #' generator with no argument.  Argument \code{example} can also be supplied as \code{FALSE} to suppress
 #' generating the default object.
-#' @param fields,methods arguments to \code{setProxyClass} and usually omitted.
+#' @param fields,methods,where,... arguments to \code{setProxyClass} and usually omitted.
 #' @param ServerClass,contains,proxyObjectClass ditto.
 setPythonClass <- function(Class, module = "",
                            fields = character(), methods = NULL,
@@ -252,7 +252,7 @@ allIndices <- function(k) {
 #' these typically include proxy objects for results previously computed through the XRPython interface.
 #' @slot name the name of the server language function
 #' @slot module the name of the module, if that needs to be imported
-#' @slot evaluatorClass the class for the evaluator, by default and usually, \code{\link{PythonInteface}}
+#' @slot evaluatorClass the class for the evaluator, by default and usually, \code{\link{PythonInterface}}
 #' @slot serverDoc the docstring from Python, if any.
 #'
 #' @slot serverArgs the Python argument names (not currently used).
