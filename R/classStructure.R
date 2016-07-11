@@ -89,13 +89,12 @@
    c(Class, module)
 }
 
-#' Class and Generator for Python Class Description from Python Metadata
-#'
-#' Creates a class definition object consistent with the XR structure.
-#' @param class,module,example Specification of the class.
-#' See \code{\link{setPythonClass}} for details.
-#' @param evaluator the interface evaluator; by default and usually, the current Python evaluator.
-#' @usage PythonClassDef(Class, module = "", example = TRUE, evaluator = RPython())
+## #' Class and Generator for Python Class Description from Python Metadata
+## #'
+## #' Extends the \code{"ServerClassDef"} class in the XR package.
+## #'
+## #' @field className the name of the Python class
+## #' @field module the name of the Python module
 PythonClassDef <- setRefClass("PythonClassDef",
                               fields = list(
                                   className = "character",

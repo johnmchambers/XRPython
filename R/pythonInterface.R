@@ -193,6 +193,12 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 #'
 #' See \code{\link{PythonInterface}} for details of the evaluator.
 #' @param ... arguments to control whether a new evaluator is started.  Normally omitted.
+#' @examples
+#' ev <- RPython()
+#' xx <- ev$Eval("[1, %s, 5]", pi)
+#' xx
+#' xx$append(4.5)
+#' ev$Command("print %s", xx)
 RPython <- function(...)
     XR::getInterface(.PythonInterfaceClass, ...)
 
@@ -302,6 +308,18 @@ NULL
 #'
 #' Add the module and name information specified to the objects imported for Python evaluators.
 #' @param ...,where  arguments for the \code{$Import()} method. See the method documentation for details.
+#' @examples
+#' \dontrun{
+#' ## How to search from a local directory, import a function from a file there
+#' ## and call the function.
+#' ## Including the evaluator argument causes the path change and import to happen
+#' ## right now, not in a package being loaded
+#' ev <- RPython()
+#' pythonAddToPath("/Users/me/myPython/", package = "",
+#'                 evaluator = ev)
+#' pythonImport("funEx", "foo", evaluator = ev)
+#' pythonCall("foo", 1.1, 1.2)
+#' }
 pythonImport <- function( ...,  evaluator,
                          where = topenv(parent.frame())) {
     if(missing(evaluator))
@@ -349,19 +367,6 @@ XR::serverTask("PythonInterface", quote(PythonCommand(
 
 pythonImport("RPython", "getMethods", "classStructure", "arglist_for_R", "function_for_R", "objectFromJSON")
 pythonImport("RPython", "value_for_R", "del_for_R", "pickle_for_R", "unpickle_for_R", "start_unpickle", "end_unpickle", "vectorR")
-
-## Conditionally arrange to use XML package to send XML objects
-ns <- tryCatch(loadNamespace("XML"), error = function(e) NULL)
-if(!is.null(ns)) {
-    setMethod("asServerObject",
-    c("XMLInternalDocument", "PythonObject"),
-          function(object, prototype) {
-              file <- tempfile()
-              XML::saveXML(object, file)
-              gettextf("xml.etree.ElementTree.parse(%s)",
-                       asServerObject(file, prototype))
-          })
-}
 
 ## Correct JSON's logical constants: always use objectFromJSON()
 setMethod("asServerObject",
