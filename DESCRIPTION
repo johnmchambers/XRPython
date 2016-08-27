@@ -6,7 +6,7 @@ Date: 2015-07-01
 Author: John M. Chambers
 Maintainer: John Chambers <jmc@stat.stanford.edu>
 Description: A Python interface structured according to the general
-    form described in package XR and the book "Extending R".
+    form described in package XR and in the book "Extending R".
 Collate: pythonInterface.R classStructure.R pythonProxyClasses.R
 License: GPL (>= 2)
 Imports: methods, XR, rPython

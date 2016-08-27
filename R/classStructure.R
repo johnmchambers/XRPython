@@ -89,12 +89,12 @@
    c(Class, module)
 }
 
-## #' Class and Generator for Python Class Description from Python Metadata
-## #'
-## #' Extends the \code{"ServerClassDef"} class in the XR package.
-## #'
-## #' @field className the name of the Python class
-## #' @field module the name of the Python module
+## NOT Roxygen Class and Generator for Python Class Description from Python Metadata
+## NOT Roxygen
+## NOT Roxygen Extends the \code{"ServerClassDef"} class in the XR package.
+## NOT Roxygen
+## NOT Roxygen @field className the name of the Python class
+## NOT Roxygen @field module the name of the Python module
 PythonClassDef <- setRefClass("PythonClassDef",
                               fields = list(
                                   className = "character",
