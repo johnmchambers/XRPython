@@ -1,4 +1,4 @@
-# XRPython - An Interfaces from R to Python
+# XRPython - An Interface from R to Python
 
 This package provides an interface from R to Python, based on the XR
 structure, as implemented in the XR package, in this repository.
@@ -11,7 +11,12 @@ The XR structure encourages definition of proxy functions and classes
 in \R{}, which users of the package can treat essentially as they
 would in R, without special programming imposed by the interface.
 
-The interface structure is described in the forthcoming book
+The interface structure is described in the book
 *Extending R* (John M. Chambers, 2016, Chapman & Hall).
 A pdf version of the XRPython chapter from the book is included with the
-documentation of this package.
+documentation of this package.  To open the pdf file from R:
+
+  `RShowDoc("Chapter_XRPython", package = "XRPython")`
+
+*CRAN Version*: A version of this package (currently version 0.7) is
+ available from the CRAN repository.

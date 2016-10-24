@@ -2,4 +2,4 @@
 .Rhistory
 .RData
 R/TAGS
-.DS_Store
+**/.DS_Store
