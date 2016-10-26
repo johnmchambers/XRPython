@@ -88,17 +88,18 @@ since it does no error checking; use $Command() instead.'
 Serialization does not rely on the R equivalent object.'
         Command("pickle_for_R(%s, %s)", key, file)
     },
-                                   ServerUnserialize = function(file, all) {
+                                   ServerUnserialize = function(file, all = FALSE) {
        'The Python unserialize using unpickle'
-        value <- Eval("start_unpickle(%s)", file, .get = FALSE)
+       value <- Eval("start_unpickle(%s)", file, .get = FALSE)
+       size <- 0L
         on.exit(Command("end_unpickle()"))
         repeat {
             obj <- Eval("unpickle_for_R(%s)", value, .get = TRUE)
             if(identical(obj, FALSE)) # => EOF
                 break
-            value@size <- value@size + 1L
+            size <- size + 1L
         }
-        if(!all && (value@size == 1L))
+        if(!all && (size == 1L))
             value <- Eval("%s[0]", value, .get = FALSE)
         value
     },
