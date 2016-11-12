@@ -44,7 +44,7 @@
         if(is(obj, "error")) {
             message(gettextf(
                 "Example (%s) failed for class %s (%s)\nOnly class information will be used",
-                             example, dQuote(Class), obj$message))
+                             example, nameQuote(Class), obj$message))
             obj <- ev$Eval(Class)
             useInstance <- FALSE
         }

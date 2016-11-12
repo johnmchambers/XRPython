@@ -14,19 +14,25 @@ list_Python <- XR::setProxyClass("list", module = "",
     )
 
 list_Python$methods(
-initialize = function (..., evaluator, .serverObject) 
+initialize = function (..., .evaluator, .serverObject) 
 {
-    if (missing(evaluator)) 
-        evaluator <- XR::getInterface("PythonInterface")
     if (missing(.serverObject)) {
         NULL
-        .serverObject <- evaluator$New("list", "", ...)
+        if (missing(.evaluator)) 
+            .evaluator <- XR::getInterface("PythonInterface")
+        .serverObject <- .evaluator$New("list", "", ...)
+    }
+    else {
+        if (missing(.evaluator)) 
+            .evaluator <- XR::proxyEvaluator(.serverObject)
+        if (!missing(...)) 
+            initFields(...)
     }
     if (is(.serverObject, "ProxyClassObject")) 
         proxy <- .serverObject$.proxyObject
     else proxy <- .serverObject
     .proxyObject <<- proxy
-    .ev <<- evaluator
+    .ev <<- .evaluator
 },
 
 ServerClassInfo = function () 
@@ -115,19 +121,25 @@ dict_Python <- XR::setProxyClass("dict", module = "",
     )
 
 dict_Python$methods(
-initialize = function (..., evaluator, .serverObject) 
+initialize = function (..., .evaluator, .serverObject) 
 {
-    if (missing(evaluator)) 
-        evaluator <- XR::getInterface("PythonInterface")
     if (missing(.serverObject)) {
         NULL
-        .serverObject <- evaluator$New("dict", "", ...)
+        if (missing(.evaluator)) 
+            .evaluator <- XR::getInterface("PythonInterface")
+        .serverObject <- .evaluator$New("dict", "", ...)
+    }
+    else {
+        if (missing(.evaluator)) 
+            .evaluator <- XR::proxyEvaluator(.serverObject)
+        if (!missing(...)) 
+            initFields(...)
     }
     if (is(.serverObject, "ProxyClassObject")) 
         proxy <- .serverObject$.proxyObject
     else proxy <- .serverObject
     .proxyObject <<- proxy
-    .ev <<- evaluator
+    .ev <<- .evaluator
 },
 
 ServerClassInfo = function () 
