@@ -26,6 +26,8 @@ the first line of the text.}
 \item{\code{Import(module, ...)}}{The Python version of this method replaces the general version in XR with the "import" or
 "from ... import" directives in Python as appropriate.}
 
+\item{\code{initialize(...)}}{The Python version, with special defaults for prototypeObject and modules}
+
 \item{\code{PythonCommand(strings)}}{A low-level command execution, needed for initializing.  Normally should not be used by applications
 since it does no error checking; use $Command() instead.}
 
@@ -42,7 +44,7 @@ since it does no error checking; use $Command() instead.}
 \item{\code{ServerSerialize(key, file)}}{Serializing and unserializing in the Python interface use the pickle structure in Python.
 Serialization does not rely on the R equivalent object.}
 
-\item{\code{ServerUnserialize(file, all)}}{The Python unserialize using unpickle}
+\item{\code{ServerUnserialize(file, all = FALSE)}}{The Python unserialize using unpickle}
 
 \item{\code{Shell(endCode = "exit", prompt = "Py>: ", cont = "Py+: ")}}{Starts an interactive Python shell.  Each line of input must be a complete Python expression
 or command, which will be evaluated in the same context as $Eval() expressions.
@@ -50,7 +52,5 @@ To continue over multiple lines, end all but the last with an unescaped backslas
 The argument `endCode` is the string to type to leave the shell, by default "exit".}
 
 \item{\code{Source(filename)}}{The $Source() method uses the Python function execfile() and therefore is quite efficient.}
-
-\item{\code{initialize(...)}}{The Python version, with special defaults for prototypeObject and modules}
 }}
 

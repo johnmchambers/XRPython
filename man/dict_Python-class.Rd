@@ -13,46 +13,64 @@ available, but methods for R functions are not implemented.
 \section{Methods}{
 
 \describe{
-\item{\code{clear(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.clear() -> None.  Remove all items from D.}
+\item{\code{clear(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: clear()
+D.clear() -> None.  Remove all items from D.}
 
-\item{\code{copy(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.copy() -> a shallow copy of D}
+\item{\code{copy(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: copy()
+D.copy() -> a shallow copy of D}
 
-\item{\code{fromkeys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
+\item{\code{fromkeys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: fromkeys()
+dict.fromkeys(S[,v]) -> New dict with keys from S and values equal to v.
 v defaults to None.}
 
-\item{\code{get(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.}
+\item{\code{get(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: get()
+D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.}
 
-\item{\code{has_key(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.has_key(k) -> True if D has a key k, else False}
+\item{\code{has_key(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: has_key()
+D.has_key(k) -> True if D has a key k, else False}
 
-\item{\code{items(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.items() -> list of D's (key, value) pairs, as 2-tuples}
+\item{\code{items(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: items()
+D.items() -> list of D's (key, value) pairs, as 2-tuples}
 
-\item{\code{iteritems(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.iteritems() -> an iterator over the (key, value) items of D}
+\item{\code{iteritems(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: iteritems()
+D.iteritems() -> an iterator over the (key, value) items of D}
 
-\item{\code{iterkeys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.iterkeys() -> an iterator over the keys of D}
+\item{\code{iterkeys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: iterkeys()
+D.iterkeys() -> an iterator over the keys of D}
 
-\item{\code{itervalues(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.itervalues() -> an iterator over the values of D}
+\item{\code{itervalues(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: itervalues()
+D.itervalues() -> an iterator over the values of D}
 
-\item{\code{keys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.keys() -> list of D's keys}
+\item{\code{keys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: keys()
+D.keys() -> list of D's keys}
 
-\item{\code{pop(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
+\item{\code{pop(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: pop()
+D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
 If key is not found, d is returned if given, otherwise KeyError is raised}
 
-\item{\code{popitem(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.popitem() -> (k, v), remove and return some (key, value) pair as a
+\item{\code{popitem(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: popitem()
+D.popitem() -> (k, v), remove and return some (key, value) pair as a
 2-tuple; but raise KeyError if D is empty.}
 
-\item{\code{setdefault(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D}
+\item{\code{setdefault(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: setdefault()
+D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D}
 
-\item{\code{update(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.update([E, ]**F) -> None.  Update D from dict/iterable E and F.
+\item{\code{update(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: update()
+D.update([E, ]**F) -> None.  Update D from dict/iterable E and F.
 If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
 If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
 In either case, this is followed by: for k in F: D[k] = F[k]}
 
-\item{\code{values(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.values() -> list of D's values}
+\item{\code{values(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: values()
+D.values() -> list of D's values}
 
-\item{\code{viewitems(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.viewitems() -> a set-like object providing a view on D's items}
+\item{\code{viewitems(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: viewitems()
+D.viewitems() -> a set-like object providing a view on D's items}
 
-\item{\code{viewkeys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.viewkeys() -> a set-like object providing a view on D's keys}
+\item{\code{viewkeys(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: viewkeys()
+D.viewkeys() -> a set-like object providing a view on D's keys}
 
-\item{\code{viewvalues(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: D.viewvalues() -> an object providing a view on D's values}
+\item{\code{viewvalues(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: viewvalues()
+D.viewvalues() -> an object providing a view on D's values}
 }}
 
