@@ -16,18 +16,22 @@ list_Python <- XR::setProxyClass("list", module = "",
 list_Python$methods(
 initialize = function (..., .evaluator, .serverObject) 
 {
+    if (missing(.evaluator)) {
+        if (missing(.serverObject)) 
+            .evaluator <- XR::getInterface("PythonInterface", 
+                .makeNew = FALSE)
+        else .evaluator <- XR::proxyEvaluator(.serverObject)
+    }
+    if (!nargs() && is.null(.evaluator)) 
+        return()
     if (missing(.serverObject)) {
-        NULL
-        if (missing(.evaluator)) 
+        if (is.null(.evaluator)) 
             .evaluator <- XR::getInterface("PythonInterface")
+        NULL
         .serverObject <- .evaluator$New("list", "", ...)
     }
-    else {
-        if (missing(.evaluator)) 
-            .evaluator <- XR::proxyEvaluator(.serverObject)
-        if (!missing(...)) 
-            initFields(...)
-    }
+    else if (!missing(...)) 
+        initFields(...)
     if (is(.serverObject, "ProxyClassObject")) 
         proxy <- .serverObject$.proxyObject
     else proxy <- .serverObject
@@ -123,18 +127,22 @@ dict_Python <- XR::setProxyClass("dict", module = "",
 dict_Python$methods(
 initialize = function (..., .evaluator, .serverObject) 
 {
+    if (missing(.evaluator)) {
+        if (missing(.serverObject)) 
+            .evaluator <- XR::getInterface("PythonInterface", 
+                .makeNew = FALSE)
+        else .evaluator <- XR::proxyEvaluator(.serverObject)
+    }
+    if (!nargs() && is.null(.evaluator)) 
+        return()
     if (missing(.serverObject)) {
-        NULL
-        if (missing(.evaluator)) 
+        if (is.null(.evaluator)) 
             .evaluator <- XR::getInterface("PythonInterface")
+        NULL
         .serverObject <- .evaluator$New("dict", "", ...)
     }
-    else {
-        if (missing(.evaluator)) 
-            .evaluator <- XR::proxyEvaluator(.serverObject)
-        if (!missing(...)) 
-            initFields(...)
-    }
+    else if (!missing(...)) 
+        initFields(...)
     if (is(.serverObject, "ProxyClassObject")) 
         proxy <- .serverObject$.proxyObject
     else proxy <- .serverObject
