@@ -20,3 +20,6 @@ export(setPythonClass)
 export(noScalar)
 exportClass("from_Python")
 exportClass(list_Python, dict_Python)
+
+export(ipython)
+
