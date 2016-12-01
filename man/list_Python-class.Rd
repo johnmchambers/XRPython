@@ -16,29 +16,38 @@ Instead, additional methods are defined for the proxy lists, e.g.,
 \section{Methods}{
 
 \describe{
-\item{\code{append(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.append(object) -- append object to end}
+\item{\code{append(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: append()
+L.append(object) -- append object to end}
 
-\item{\code{count(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.count(value) -> integer -- return number of occurrences of value}
+\item{\code{count(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: count()
+L.count(value) -> integer -- return number of occurrences of value}
 
-\item{\code{el(i)}}{Extract an element from the list (zero based indexing).
+\item{\code{el(i, .ev = XRPython::RPython(), .get = NA)}}{Extract an element from the list (zero based indexing).
 The index will be coerced to integer (unless a proxy).}
 
-\item{\code{extend(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.extend(iterable) -- extend list by appending elements from the iterable}
+\item{\code{extend(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: extend()
+L.extend(iterable) -- extend list by appending elements from the iterable}
 
-\item{\code{index(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.index(value, [start, [stop]]) -> integer -- return first index of value.
+\item{\code{index(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: index()
+L.index(value, [start, [stop]]) -> integer -- return first index of value.
 Raises ValueError if the value is not present.}
 
-\item{\code{insert(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.insert(index, object) -- insert object before index}
+\item{\code{insert(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: insert()
+L.insert(index, object) -- insert object before index}
 
-\item{\code{pop(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.pop([index]) -> item -- remove and return item at index (default last).
+\item{\code{pop(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: pop()
+L.pop([index]) -> item -- remove and return item at index (default last).
 Raises IndexError if list is empty or index is out of range.}
 
-\item{\code{remove(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.remove(value) -- remove first occurrence of value.
+\item{\code{remove(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: remove()
+L.remove(value) -- remove first occurrence of value.
 Raises ValueError if the value is not present.}
 
-\item{\code{reverse(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.reverse() -- reverse *IN PLACE*}
+\item{\code{reverse(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: reverse()
+L.reverse() -- reverse *IN PLACE*}
 
-\item{\code{sort(..., .ev = XRPython::RPython(), .get = NA)}}{Python Documentation: L.sort(cmp=None, key=None, reverse=False) -- stable sort *IN PLACE*;
+\item{\code{sort(..., .ev = XRPython::RPython(), .get = NA)}}{Python Method: sort()
+L.sort(cmp=None, key=None, reverse=False) -- stable sort *IN PLACE*;
 cmp(x, y) -> -1, 0, 1}
 }}
 

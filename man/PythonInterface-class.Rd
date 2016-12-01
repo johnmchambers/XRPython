@@ -42,7 +42,7 @@ since it does no error checking; use $Command() instead.}
 \item{\code{ServerSerialize(key, file)}}{Serializing and unserializing in the Python interface use the pickle structure in Python.
 Serialization does not rely on the R equivalent object.}
 
-\item{\code{ServerUnserialize(file, all)}}{The Python unserialize using unpickle}
+\item{\code{ServerUnserialize(file, all = FALSE)}}{The Python unserialize using unpickle}
 
 \item{\code{Shell(endCode = "exit", prompt = "Py>: ", cont = "Py+: ")}}{Starts an interactive Python shell.  Each line of input must be a complete Python expression
 or command, which will be evaluated in the same context as $Eval() expressions.
