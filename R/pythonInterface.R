@@ -435,3 +435,38 @@ NULL
 #' @param object A vector object.  Calling with a non-vector is an error.
 #' @name noScalar
 NULL
+
+#' Write a File of Python Commands to Test Package Modules in Python
+#'
+#' A file of python commands will be written that set up an interactive Python session
+#' having imported the contents from a file (module) of python code in an R package.
+#' Typically, uploading such a file to \code{ipython} notebook allows the python code, along with additional or modified code, to
+#' be tested directly without interfacing from R.
+#' @param file A file name or open write connection.  The python commands generated will be written to this file.
+#' @param package The R package containing the relevent module
+#' @param module The file (module) to be imported.  Specifically, a command \code{"from ... import *"} will be generated.
+#' Omit this argument or supply it as \code{""} to suppress this command, in which case explicit commands should be provided.
+#' @param ... Additional python commands to be appended to the output file.
+#' @param RPython Should the path include the XRPython code, default \code{TRUE}, which is usually what you want.
+#' @param folder The name of the folder in the installed package; the default is the suggested \code{"python"}; that is, the installed
+#' version of folder \code{"inst/python"} in the source for the package.  Note that it's the installed version; changes to the source
+#' code must be installed to show up in the output.
+ipython <- function(file, package, module = "", ..., RPython = TRUE, folder = "python") {
+    dots <- list(...)
+    output <- "import sys"
+    if(RPython)
+        output <- c(output, paste0("sys.path.append(",nameQuote(system.file("python", package = "XRPython")),")"),
+                    paste0("sys.path.append(", nameQuote(system.file(folder, package = package)), ")"))
+    if(nzchar(module))
+        output <- c(output, paste0("from ", module, " import *"))
+    ## else expect commands in ...
+    for( more in dots) {
+        if(is.character(more))
+            output <- c(output, more)
+        else
+            stop("... arguments should be python commands")
+    }
+    writeLines(output, file)
+    invisible(output)
+}
+

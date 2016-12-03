@@ -339,3 +339,15 @@ def inferType(data) :
     elif isinstance(x, bool):
         return "logical"
     return "list"
+
+def inherits(target, obj):
+    ''' Copy the fields of obj into target, where a field
+    is an attribute but not of MethodType
+    '''
+    if not hasattr(obj, "__module__"):
+        return target # no fields in a builtin type
+    for el in dir(obj):
+        member = getattr(obj, el)
+        if re.search("^[a-zA-Z]", el) and not isinstance(member, types.MethodType):
+            setattr(target, el, member)
+    return target
