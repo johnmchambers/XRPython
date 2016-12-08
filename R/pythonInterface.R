@@ -470,3 +470,24 @@ ipython <- function(file, package, module = "", ..., RPython = TRUE, folder = "p
     invisible(output)
 }
 
+#' Test if a Proxy Object is an Instance of a Python Type
+#'
+#' Applies the Python function \code{isinstance()} to \code{object}.  NOTE:  this function should be used to test inheritance on the Python side,
+#' even if there are proxy classes for everything involved.  It is not true (with the present version of the package) that inheritance in Python
+#' corresponds to inheritance in R for the proxy classes.
+#' @param object Any object.  The function returns \code{FALSE} without further testing if the object is not a proxy object.
+#' @param type A character string corresponding to the Python type (not to the name of a proxy class for the type).
+#'
+#' A Python error will result
+#' if there is no such type, or if \code{object} is a proxy from another language.
+#' The implementation diverges from a direct mapping into the Python \code{isinstance} to handle a Python bizarre for functions:  although \code{type(f)}
+#' causes you to think functions have the obvious type, that doesn't work in \code{isinstance}.  So the R code uses what works for this case.
+#' (Before we get too sarcastic, the problem is similar to that in R from primitives, making \code{class(f)} and \code{typeof(f)} confusing.)
+isinstance <- function(object, type, .ev = RPython()) {
+    if(XR::isProxy(object))
+        switch(type, `function` = .ev$Eval("callable(%s)", object),
+               .ev$Eval("isinstance(%s,%s)", object, as.name(type)))
+    else
+        FALSE
+}
+    

@@ -22,3 +22,5 @@ exportClass("from_Python")
 exportClass(list_Python, dict_Python)
 export(list_Python, dict_Python)
 export(ipython)
+export(isinstance)
+
