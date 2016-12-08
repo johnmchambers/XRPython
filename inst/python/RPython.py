@@ -340,14 +340,17 @@ def inferType(data) :
         return "logical"
     return "list"
 
-def inherits(target, obj):
+def inherits(target, obj, copyAll = True):
     ''' Copy the fields of obj into target, where a field
-    is an attribute but not of MethodType
+    is an attribute but not of MethodType.  If `copyAll` is False, only copy attributes already
+    defined in `target`.  This is the safe strategy if `obj` could be from a subclass, but requires
+    that `target` be initialized with some value for all the intended attributes.  For well-defined classes,
+    this function is the equivalent of having a superclass object as an argument to the initialize method.
     '''
     if not hasattr(obj, "__module__"):
         return target # no fields in a builtin type
     for el in dir(obj):
         member = getattr(obj, el)
-        if re.search("^[a-zA-Z]", el) and not isinstance(member, types.MethodType):
+        if re.search("^[a-zA-Z]", el) and not isinstance(member, types.MethodType) and (copyAll or hasattr(target, el)):
             setattr(target, el, member)
     return target
