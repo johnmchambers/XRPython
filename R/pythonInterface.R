@@ -31,8 +31,8 @@ PythonInterface <- setRefClass("PythonInterface",
                      }
              expr <- gettextf("_R_value = value_for_R(%s, %s, %s)",
                              pyExpr, deparse(key), pySend)
-             python.exec(expr)
-             string <- python.get("_R_value")
+             PythonCommand(expr)
+             string <- reticulate::py_eval("_R_value") #? reticulate has no version of python.get()
              XR::valueFromServer(string, key, get, .self)
          },
     ServerClassDef = function(Class, module = "", example = TRUE ) {
@@ -81,7 +81,7 @@ the first line of the text.'
     PythonCommand = function(strings) {
         'A low-level command execution, needed for initializing.  Normally should not be used by applications
 since it does no error checking; use $Command() instead.'
-        python.exec(strings)
+        reticulate::py_run_string(strings, convert = FALSE)
     },
     ServerSerialize = function(key, file) {
         'Serializing and unserializing in the Python interface use the pickle structure in Python.
@@ -115,31 +115,21 @@ Serialization does not rely on the R equivalent object.'
     ## replaces the XR method for Import()
     Import = function(module, ...)  {
         'The Python version of this method replaces the general version in XR with the "import" or
-"from ... import" directives in Python as appropriate.'
+"from ... import" directives in Python as appropriate.  Returns the `reticulate` version of the module object, which can be used directly'
         members <- unlist(c(...))
         imported <- base::exists(module, envir = modules)
-        if(imported && is.null(members)) # the usual case
-            return(TRUE)
-        ## has this been done before?
-        if(imported) {
-            hasDone <- base::get(module, envir = modules)
-            if(length(members)) {
-                if(all(members %in% hasDone))
-                    return(TRUE)
-            }
-            else if ( ".IMPORT" %in% hasDone)
-                return(TRUE)
-        }
-        else hasDone <- character()
-        if(length(members))
-            code <- paste("from", module, "import", paste(members, collapse = ", "))
+        if(imported) # the usual case
+            mod <- base::get(module, envir = modules)
         else {
-            code <- paste("import", module)
-            members <- ".IMPORT"
+            mod <- do.call(reticulate::import, list(module))
+            base::assign(module,mod , envir = modules)
         }
-        Command(code)
-        base::assign(module, unique(c(members, hasDone)), envir = modules)
-        return(members)
+        if(length(members)) {
+            ## TODO:  should remember what has been imported
+            code <- paste("from", module, "import", paste(members, collapse = ", "))
+            Command(code)
+        }
+        return(mod)
     },
 
 ### start a python shell
@@ -490,4 +480,34 @@ isinstance <- function(object, type, .ev = RPython()) {
     else
         FALSE
 }
-    
+ 
+#' Convert Proxy Objects between XRPython and reticulate
+#'
+#' Packages XRPython and reticulate both support proxies for Python objects; that is, R objects that are
+#' proxies for objects created in Python by evaluations in the respective packages.  Function \code{fromRtclt()}
+#' returns the equivalent XRPython proxy object given a reticulate object.
+#' Function \code{toRtclt()} returns the equivalent reticulate proxy object given an XRPython object.
+#' Normally, no copying is involved in either direction.
+#'
+#' @param obj a proxy object, computed in XRPython for \code{toRtclt} or by reticulate for \code{fromRtclt}
+#' @param .ev an XRPython evaluator, by default and usually the current evaluator.
+#' @name convert
+NULL
+
+#' @describeIn convert
+#' Convert from reticulate to XRPython
+fromRtclt <- function(obj, .ev = XRPython::RPython()) {
+    rpy <- .ev$Import("RPython")
+    key <- .ev$ProxyName()
+    ## call as a reticulate expression to store obj, return proxy with this key
+    robj <- rpy$proxy_or_object(obj, FALSE, key)
+    XR::valueFromServer(robj, key, FALSE, .ev)
+}
+
+#' @describeIn convert
+#' Convert from XRPython to reticulate
+toRtclt <- function(obj, .ev = XRPython::RPython()) {
+    key <- XR::proxyName(obj)
+    reticulate::py_run_string("import RPython")
+    reticulate::py_eval(gettextf("RPython._for_R[%s]", deparse(key)), convert = FALSE)
+}
