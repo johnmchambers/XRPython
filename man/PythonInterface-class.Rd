@@ -24,7 +24,9 @@ in a function definiition.  The method returns a proxy function with a name infe
 the first line of the text.}
 
 \item{\code{Import(module, ...)}}{The Python version of this method replaces the general version in XR with the "import" or
-"from ... import" directives in Python as appropriate.}
+"from ... import" directives in Python as appropriate.  Returns the `reticulate` version of the module object, which can be used directly}
+
+\item{\code{initialize(...)}}{The Python version, with special defaults for prototypeObject and modules}
 
 \item{\code{PythonCommand(strings)}}{A low-level command execution, needed for initializing.  Normally should not be used by applications
 since it does no error checking; use $Command() instead.}
@@ -50,7 +52,5 @@ To continue over multiple lines, end all but the last with an unescaped backslas
 The argument `endCode` is the string to type to leave the shell, by default "exit".}
 
 \item{\code{Source(filename)}}{The $Source() method uses the Python function execfile() and therefore is quite efficient.}
-
-\item{\code{initialize(...)}}{The Python version, with special defaults for prototypeObject and modules}
 }}
 
