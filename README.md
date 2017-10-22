@@ -18,5 +18,5 @@ documentation of this package.  To open the pdf file from R:
 
   `RShowDoc("Chapter_XRPython", package = "XRPython")`
 
-*CRAN Version*: A version of this package (currently version 0.7) is
- available from the CRAN repository.
+As of version 0.8, the package uses package 'reticulate' for its
+low-level interface to Python, replacing 'rpython'.
