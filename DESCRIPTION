@@ -2,7 +2,7 @@ Package: XRPython
 Type: Package
 Title: Structured Interface to Python
 Version: 0.8
-Date: 2016-08-27
+Date: 2017-10-22
 Author: John M. Chambers
 Maintainer: John Chambers <jmc@r-project.org>
 Description: A Python interface structured according to the general
@@ -12,4 +12,4 @@ License: GPL (>= 2)
 Imports: methods, XR, reticulate
 Packaged: 2017-08-12 15:41:18 UTC; jmc
 NeedsCompilation: no
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

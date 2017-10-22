@@ -473,6 +473,7 @@ ipython <- function(file, package, module = "", ..., RPython = TRUE, folder = "p
 #' The implementation diverges from a direct mapping into the Python \code{isinstance} to handle a Python bizarre for functions:  although \code{type(f)}
 #' causes you to think functions have the obvious type, that doesn't work in \code{isinstance}.  So the R code uses what works for this case.
 #' (Before we get too sarcastic, the problem is similar to that in R from primitives, making \code{class(f)} and \code{typeof(f)} confusing.)
+#' @param .ev an XRPython evaluator, by default and usually the current evaluator.
 isinstance <- function(object, type, .ev = RPython()) {
     if(XR::isProxy(object))
         switch(type, `function` = .ev$Eval("callable(%s)", object),

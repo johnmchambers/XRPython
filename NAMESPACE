@@ -2,8 +2,6 @@ import(XR)
 
 importFrom(methods, is, allNames, new, callNextMethod)
 
-importFrom(rPython, python.exec, python.get)
-
 export(RPython)
 
 ## Don't export PythonClassDef class for now.
