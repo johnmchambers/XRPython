@@ -18,9 +18,11 @@ returned.
 See \code{\link{PythonInterface}} for details of the evaluator.
 }
 \examples{
-ev <- RPython()
-xx <- ev$Eval("[1, \%s, 5]", pi)
-xx
-xx$append(4.5)
-ev$Command("print \%s", xx)
+if(okPython(TRUE)) {
+  ev <- RPython()
+  xx <- ev$Eval("[1, \%s, 5]", pi)
+  xx
+  xx$append(4.5)
+  ev$Command("print \%s", xx)
+}
 }
