@@ -20,3 +20,8 @@ documentation of this package.  To open the pdf file from R:
 
 As of version 0.8, the package uses package 'reticulate' for its
 low-level interface to Python, replacing 'rpython'.
+
+To test whether a working Python interface can be opened on this
+machine:
+  okPython(TRUE)
+which will return TRUE or FALSE and report the cause of a failure.
