@@ -185,11 +185,13 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 #' See \code{\link{PythonInterface}} for details of the evaluator.
 #' @param ... arguments to control whether a new evaluator is started.  Normally omitted.
 #' @examples
-#' ev <- RPython()
-#' xx <- ev$Eval("[1, %s, 5]", pi)
-#' xx
-#' xx$append(4.5)
-#' ev$Command("print %s", xx)
+#' if(okPython(TRUE)) {
+#'   ev <- RPython()
+#'   xx <- ev$Eval("[1, %s, 5]", pi)
+#'   xx
+#'   xx$append(4.5)
+#'   ev$Command("print %s", xx)
+#' }
 RPython <- function(...)
     XR::getInterface(.PythonInterfaceClass, ...)
 
@@ -511,4 +513,35 @@ toRtclt <- function(obj, .ev = XRPython::RPython()) {
     key <- XR::proxyName(obj)
     reticulate::py_run_string("import RPython")
     reticulate::py_eval(gettextf("RPython._for_R[%s]", deparse(key)), convert = FALSE)
+}
+
+#' Check for a Valid Python for Interface
+#'
+#' The function returns true or false according to whether a Python interface can be established.  This
+#' will fail if no Python exists, if it is incompatible with this version of XRPython (e.g., 32 vs 64 bits
+#' in Windows), or if for some reason it can't evaluate a trivial expression correctly.  Warnings are printed
+#' but ignored.
+#'
+#' @param verbose Should a message with the cause of a failure be reported?  Default \code{FALSE}.
+okPython <- function(verbose = FALSE) {
+    ev <- tryCatch(RPython(), error = function(e)e)
+    if(is(ev, "PythonInterface")) {
+        test <- tryCatch(ev$Eval("1"), error = function(e)e)
+        if(identical(all.equal(test, 1), TRUE))
+            TRUE
+        else {
+            if(verbose)
+                message("Attempt to evalute 1 in Python got: ", test)
+            FALSE
+        }
+    }
+    else {
+        if(verbose) {
+            if(is(ev, "error"))
+                message("Error in creating evaluator: ", conditionMessage(ev))
+            else
+                message("Expected PythonInterface object, got class: ", class(ev))
+        }
+        FALSE
+    }
 }

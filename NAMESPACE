@@ -23,3 +23,5 @@ export(ipython)
 export(isinstance)
 
 export(toRtclt, fromRtclt)
+
+export(okPython)
