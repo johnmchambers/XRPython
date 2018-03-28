@@ -58,11 +58,24 @@ the first line of the text.'
             on.exit(close(con))
             text <- base::readLines(con)
         }
-        ## try to parse the first line to get the function name
-        fname <- text[[1]]
-        fname <- gsub("[(].*","",gsub("^def  *", "", fname))
-        if(grepl("[^_a-zA-Z]",fname)) # doesn't look like a function def.
-            fname <- "" # At present, we just go ahead
+        ## try to parse "def" line(s) for function name(s)
+        fname <- ""; globals <- character()
+        for(string in text) {
+            if(grepl("^def ", string)) {
+                thisname <- gsub("[(].*","",gsub("^def  *", "", string))
+                if(grepl("^[_a-zA-Z][_a-zA-Z0-9]*$",thisname)) {
+                    globals <- c(globals, thisname)
+                    if(!nzchar(fname))
+                        fname <- thisname
+                }
+            }
+        }
+        if(!nzchar(fname))
+            warning("No function definition found; text will be evaluated anyway")
+        else if(length(globals) > 1)
+            message(gettextf("Multiple function definitions found; only \"%s\" will be returned", fname))
+        if(nzchar(fname))
+            text <- c(paste("global",paste(globals, collapse=", ")), text)
         string <- paste(text, collapse = "\n")
         Command(string)
         if(nzchar(fname))
