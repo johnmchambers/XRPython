@@ -214,7 +214,7 @@ def unpickle_for_R(obj):
 
 def value_for_R(expr, key, send):
     code = None
-    if key == "":
+    if key == "" or key == "forR":
         what = "command"
         comp = 'exec'
     else:
@@ -226,10 +226,13 @@ def value_for_R(expr, key, send):
         return error_for_R("Compile error in {0} \"{1}\": {2}".format(what, expr, sys.exc_value))
     obj = None
     try:
-        obj = eval(code, globals(), _for_R)
+        if key == "forR" :
+            eval(code, _for_R)
+        else:
+            obj = eval(code, globals(), _for_R)
     except:
         return error_for_R("Evaluation error in {0} \"{1}\": {2}".format(what, expr, sys.exc_value))
-    if key == "":
+    if key == "" or key == "forR":
         return 'null'
     return proxy_or_object(obj, send, key)
 
