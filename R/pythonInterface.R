@@ -26,9 +26,10 @@ PythonInterface <- setRefClass("PythonInterface",
              pySend <- { if(is.na(get)) "None"
                           else if(get) "True"
                           else "False"}
-             pyExpr <- { if(is.character(strings)) deparse(strings)
-                         else deparse(as.character(strings)) # does this ever happn?
-                     }
+             if(!is.character(strings)) # does this ever happen?
+                   strings <- as.character(strings)
+             strings <- paste(strings, collapse ="\n") 
+             pyExpr <- deparse(strings)
              expr <- gettextf("_R_value = value_for_R(%s, %s, %s)",
                              pyExpr, deparse(key), pySend)
              PythonCommand(expr)
@@ -47,7 +48,7 @@ PythonInterface <- setRefClass("PythonInterface",
         'Define a Python function from a character vector, `text` or by reading the text
 from a file via readLines().  Character vectors are taken to represent lines of Python code
 in a function definiition.  The method returns a proxy function with a name inferred from
-the first line of the text.'
+the text. May be used to define multiple functions, but only the first will be returned.'
         if(missing(text)) {
             if(is(file, "connection")) {
                 if(!isOpen(file))
@@ -74,10 +75,8 @@ the first line of the text.'
             warning("No function definition found; text will be evaluated anyway")
         else if(length(globals) > 1)
             message(gettextf("Multiple function definitions found; only \"%s\" will be returned", fname))
-        if(nzchar(fname))
-            text <- c(paste("global",paste(globals, collapse=", ")), text)
         string <- paste(text, collapse = "\n")
-        Command(string)
+        Command_forR(string)
         if(nzchar(fname))
             PythonFunction(fname)
         else
@@ -85,7 +84,7 @@ the first line of the text.'
     },
     Source = function(filename) {
         'The $Source() method uses the Python function execfile() and therefore is quite efficient.'
-        Command("execfile(%s)", filename)
+        Command("execfile(%s,_for_R)", filename) # forR?
     },
     ServerRemove = function(key) {
        'The Python version using del_for_R())'
@@ -99,13 +98,13 @@ since it does no error checking; use $Command() instead.'
     ServerSerialize = function(key, file) {
         'Serializing and unserializing in the Python interface use the pickle structure in Python.
 Serialization does not rely on the R equivalent object.'
-        Command("pickle_for_R(%s, %s)", key, file)
+        Command("pickle_for_R(%s, %s)", key, file) # forR?
     },
                                    ServerUnserialize = function(file, all = FALSE) {
        'The Python unserialize using unpickle'
        value <- Eval("start_unpickle(%s)", file, .get = FALSE)
        size <- 0L
-        on.exit(Command("end_unpickle()"))
+        on.exit(Command("end_unpickle()")) # forR?
         repeat {
             obj <- Eval("unpickle_for_R(%s)", value, .get = TRUE)
             if(identical(obj, FALSE)) # => EOF
@@ -128,19 +127,23 @@ Serialization does not rely on the R equivalent object.'
     ## replaces the XR method for Import()
     Import = function(module, ...)  {
         'The Python version of this method replaces the general version in XR with the "import" or
-"from ... import" directives in Python as appropriate.  Returns the `reticulate` version of the module object, which can be used directly'
+"from ... import" directives in Python as appropriate.  Returns the `reticulate` version of the module object, which can be used directly.
+Use "*" to import all objects from the module.'
         members <- unlist(c(...))
+        hasMembers <- length(members) > 0
         imported <- base::exists(module, envir = modules)
         if(imported) # the usual case
             mod <- base::get(module, envir = modules)
         else {
             mod <- do.call(reticulate::import, list(module))
             base::assign(module,mod , envir = modules)
+            if(!hasMembers) # add the module by name to _for_R
+                Command_forR(paste("import", module))
         }
-        if(length(members)) {
+        if(hasMembers) {
             ## TODO:  should remember what has been imported
             code <- paste("from", module, "import", paste(members, collapse = ", "))
-            Command(code)
+            Command_forR(code)
         }
         return(mod)
     },
@@ -186,6 +189,14 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
         Eval(code, .get = TRUE)
     }
 ))
+
+## Additional methods
+PythonInterface$methods(
+                    Command_forR = function(expr, ...,forR = TRUE) {  # this will become the Command method
+                        key <- if(forR) "forR" else ""
+                        invisible(ServerEval(ServerExpression(expr, ...), key, FALSE))
+                    }
+)
 
 .PythonInterfaceClass <- getClass("PythonInterface")
 
