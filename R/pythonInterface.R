@@ -76,7 +76,7 @@ the text. May be used to define multiple functions, but only the first will be r
         else if(length(globals) > 1)
             message(gettextf("Multiple function definitions found; only \"%s\" will be returned", fname))
         string <- paste(text, collapse = "\n")
-        Command_forR(string)
+        Command(string)
         if(nzchar(fname))
             PythonFunction(fname)
         else
@@ -84,7 +84,7 @@ the text. May be used to define multiple functions, but only the first will be r
     },
     Source = function(filename) {
         'The $Source() method uses the Python function execfile() and therefore is quite efficient.'
-        Command_forR("execfile(%s,_for_R)", filename) # forR?
+        Command("execfile(%s)", filename) # forR?
     },
     ServerRemove = function(key) {
        'The Python version using del_for_R())'
@@ -98,13 +98,13 @@ since it does no error checking; use $Command() instead.'
     ServerSerialize = function(key, file) {
         'Serializing and unserializing in the Python interface use the pickle structure in Python.
 Serialization does not rely on the R equivalent object.'
-        Command_forR("pickle_for_R(%s, %s)", key, file) # forR?
+        Command("pickle_for_R(%s, %s)", key, file) # forR?
     },
                                    ServerUnserialize = function(file, all = FALSE) {
        'The Python unserialize using unpickle'
        value <- Eval("start_unpickle(%s)", file, .get = FALSE)
        size <- 0L
-        on.exit(Command_forR("end_unpickle()")) # forR?
+        on.exit(Command("end_unpickle()")) # forR?
         repeat {
             obj <- Eval("unpickle_for_R(%s)", value, .get = TRUE)
             if(identical(obj, FALSE)) # => EOF
@@ -138,12 +138,12 @@ Use "*" to import all objects from the module.'
             mod <- do.call(reticulate::import, list(module))
             base::assign(module,mod , envir = modules)
             if(!hasMembers) # add the module by name to _for_R
-                Command_forR(paste("import", module))
+                Command(paste("import", module))
         }
         if(hasMembers) {
             ## TODO:  should remember what has been imported
             code <- paste("from", module, "import", paste(members, collapse = ", "))
-            Command_forR(code)
+            Command(code)
         }
         return(mod)
     },
@@ -192,7 +192,7 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 
 ## Additional methods
 PythonInterface$methods(
-                    Command_forR = function(expr, ...,forR = TRUE) {  # this will become the Command method
+                    Command = function(expr, ...,forR = TRUE) {
                         key <- if(forR) "forR" else ""
                         invisible(ServerEval(ServerExpression(expr, ...), key, FALSE))
                     }
