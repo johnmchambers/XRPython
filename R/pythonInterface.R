@@ -84,7 +84,7 @@ the text. May be used to define multiple functions, but only the first will be r
     },
     Source = function(filename) {
         'The $Source() method uses the Python function execfile() and therefore is quite efficient.'
-        Command("execfile(%s)", filename) # forR?
+        Command("execfile(%s)", filename)
     },
     ServerRemove = function(key) {
        'The Python version using del_for_R())'
@@ -98,13 +98,13 @@ since it does no error checking; use $Command() instead.'
     ServerSerialize = function(key, file) {
         'Serializing and unserializing in the Python interface use the pickle structure in Python.
 Serialization does not rely on the R equivalent object.'
-        Command("pickle_for_R(%s, %s)", key, file) # forR?
+        Command("pickle_for_R(%s, %s)", key, file)
     },
                                    ServerUnserialize = function(file, all = FALSE) {
        'The Python unserialize using unpickle'
        value <- Eval("start_unpickle(%s)", file, .get = FALSE)
        size <- 0L
-        on.exit(Command("end_unpickle()")) # forR?
+        on.exit(Command("end_unpickle()"))
         repeat {
             obj <- Eval("unpickle_for_R(%s)", value, .get = TRUE)
             if(identical(obj, FALSE)) # => EOF
@@ -192,8 +192,8 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
 
 ## Additional methods
 PythonInterface$methods(
-                    Command = function(expr, ...,forR = TRUE) {
-                        key <- if(forR) "forR" else ""
+                    Command = function(expr, ...) {
+                        key <- ""
                         invisible(ServerEval(ServerExpression(expr, ...), key, FALSE))
                     }
 )
