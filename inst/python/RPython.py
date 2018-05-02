@@ -226,7 +226,10 @@ def value_for_R(expr, key, send):
         return error_for_R("Compile error in {0} \"{1}\": {2}".format(what, expr, sys.exc_value))
     obj = None
     try:
-        obj = eval(code, globals(), _for_R)
+        if key == "" :
+            eval(code, _for_R)
+        else:
+            obj = eval(code, _for_R)
     except:
         return error_for_R("Evaluation error in {0} \"{1}\": {2}".format(what, expr, sys.exc_value))
     if key == "":

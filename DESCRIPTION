@@ -1,7 +1,7 @@
 Package: XRPython
 Type: Package
 Title: Structured Interface to 'Python'
-Version: 0.8
+Version: 0.8.1
 Date: 2017-10-22
 Author: John M. Chambers
 Maintainer: John Chambers <jmc@r-project.org>

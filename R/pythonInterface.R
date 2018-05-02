@@ -26,9 +26,10 @@ PythonInterface <- setRefClass("PythonInterface",
              pySend <- { if(is.na(get)) "None"
                           else if(get) "True"
                           else "False"}
-             pyExpr <- { if(is.character(strings)) deparse(strings)
-                         else deparse(as.character(strings)) # does this ever happn?
-                     }
+             if(!is.character(strings)) # does this ever happen?
+                   strings <- as.character(strings)
+             strings <- paste(strings, collapse ="\n") 
+             pyExpr <- deparse(strings)
              expr <- gettextf("_R_value = value_for_R(%s, %s, %s)",
                              pyExpr, deparse(key), pySend)
              PythonCommand(expr)
@@ -47,7 +48,7 @@ PythonInterface <- setRefClass("PythonInterface",
         'Define a Python function from a character vector, `text` or by reading the text
 from a file via readLines().  Character vectors are taken to represent lines of Python code
 in a function definiition.  The method returns a proxy function with a name inferred from
-the first line of the text.'
+the text. May be used to define multiple functions, but only the first will be returned.'
         if(missing(text)) {
             if(is(file, "connection")) {
                 if(!isOpen(file))
@@ -74,8 +75,6 @@ the first line of the text.'
             warning("No function definition found; text will be evaluated anyway")
         else if(length(globals) > 1)
             message(gettextf("Multiple function definitions found; only \"%s\" will be returned", fname))
-        if(nzchar(fname))
-            text <- c(paste("global",paste(globals, collapse=", ")), text)
         string <- paste(text, collapse = "\n")
         Command(string)
         if(nzchar(fname))
@@ -128,16 +127,20 @@ Serialization does not rely on the R equivalent object.'
     ## replaces the XR method for Import()
     Import = function(module, ...)  {
         'The Python version of this method replaces the general version in XR with the "import" or
-"from ... import" directives in Python as appropriate.  Returns the `reticulate` version of the module object, which can be used directly'
+"from ... import" directives in Python as appropriate.  Returns the `reticulate` version of the module object, which can be used directly.
+Use "*" to import all objects from the module.'
         members <- unlist(c(...))
+        hasMembers <- length(members) > 0
         imported <- base::exists(module, envir = modules)
         if(imported) # the usual case
             mod <- base::get(module, envir = modules)
         else {
             mod <- do.call(reticulate::import, list(module))
             base::assign(module,mod , envir = modules)
+            if(!hasMembers) # add the module by name to _for_R
+                Command(paste("import", module))
         }
-        if(length(members)) {
+        if(hasMembers) {
             ## TODO:  should remember what has been imported
             code <- paste("from", module, "import", paste(members, collapse = ", "))
             Command(code)
@@ -186,6 +189,14 @@ The argument `endCode` is the string to type to leave the shell, by default "exi
         Eval(code, .get = TRUE)
     }
 ))
+
+## Additional methods
+PythonInterface$methods(
+                    Command = function(expr, ...) {
+                        key <- ""
+                        invisible(ServerEval(ServerExpression(expr, ...), key, FALSE))
+                    }
+)
 
 .PythonInterfaceClass <- getClass("PythonInterface")
 
