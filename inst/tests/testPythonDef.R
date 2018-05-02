@@ -1,16 +1,7 @@
 ## Various tests of defining Python functions
 library(XRPython)
-tests <- system.file("tests", package = "XRPython")
-testf <- function(...) paste(c(tests, ...), collapse = "/")
-mustbe <- function(x,y, verbose = TRUE) {
-    if(identical(all.equal(x,y), TRUE))
-      {if(verbose) message(gettextf("%s and %s agreed",
-                                    deparse(substitute(x)),deparse(substitute(y))))}
-    else
-        stop(gettextf("%s and %s differed",
-                      deparse(substitute(x)),deparse(substitute(y))))
-    "OK"
-}
+testf <- function(...) system.file("tests", ...,package = "XRPython" )
+source(testf("mustbe.R"))
 ## a single def from a file
 fib1 <- pythonDefine(file = testf("fib1.py"))
 mustbe(fib1(10L), 55L)
@@ -51,7 +42,6 @@ else
     gettexf("test of def using imported sympy module not run:  could not import: %s",
             e$message))
 }
-
 
 
   

@@ -229,10 +229,10 @@ def value_for_R(expr, key, send):
         if key == "" :
             eval(code, _for_R)
         else:
-            obj = eval(code, globals(), _for_R)
+            obj = eval(code, _for_R)
     except:
         return error_for_R("Evaluation error in {0} \"{1}\": {2}".format(what, expr, sys.exc_value))
-    if key == "" or key == "forR":
+    if key == "":
         return 'null'
     return proxy_or_object(obj, send, key)
 
